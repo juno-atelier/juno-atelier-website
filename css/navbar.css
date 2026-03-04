@@ -1,0 +1,355 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   navbar.css — Navigation-specific styles
+   Juno Atelier · Vanilla HTML/CSS/JS Conversion
+
+   FIX v2: Resolved conflict with styles.css Section 15 where both files
+   defined .mobile-drawer with different animation techniques (transform
+   vs max-height). The translateX(100%) from styles.css was persisting and
+   pushing the drawer off-screen, causing both the invisible nav links bug
+   and the horizontal overflow / scrollbar on mobile.
+
+   FIX v3: Unified sticky header logic.
+   - background token corrected to --color-cream (styles.css §11 used --color-white)
+   - isolation: isolate added to prevent stacking context bleed-through
+   - .is-scrolled drives BOTH the shadow enhancement AND the compact height
+   - .site-header--compact from styles.css §11 is now superseded by
+     .is-scrolled .nav-inner — delete the old class from styles.css
+
+   Resolution: This file is now the single source of truth for .site-header,
+   .mobile-drawer, and all scroll-driven header states.
+───────────────────────────────────────────────────────────────────────────── */
+
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--header-z);
+
+  /*
+     FIX v3: Corrected from --color-white (styles.css §11) → --color-cream.
+     Both files previously set the background with different values, causing
+     a silent color conflict on page load where styles.css won due to cascade
+     order. navbar.css is now the single source of truth for this property.
+  */
+  background: var(--color-cream);
+
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+
+  /*
+     FIX v3: isolation: isolate creates an explicit stacking context on the
+     header itself. Without this, positioned child elements (hero sections,
+     modals, cards with z-index) can bleed through the nav on Safari and
+     certain Chrome versions even when their z-index is numerically lower
+     than --header-z. This is a zero-cost defensive fix.
+  */
+  isolation: isolate;
+
+  /*
+     Include height in the transition so the compact collapse (triggered
+     by .is-scrolled .nav-inner below) animates smoothly.
+  */
+  transition:
+    background      var(--transition-mid),
+    box-shadow      var(--transition-mid),
+    border-color    var(--transition-mid);
+
+  overflow: visible;
+}
+
+
+/* ── Scrolled state — deeper shadow + subtle border ─────────────────────── */
+/*
+   Applied by the unified initStickyHeader() handler in components.js.
+   This replaces both the old .is-scrolled block AND styles.css .site-header--compact.
+   One JS class drives both the visual enhancement and the compact height.
+*/
+.site-header.is-scrolled {
+  background: var(--color-cream);
+  border-bottom-color: var(--color-border-mid);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+}
+
+/*
+   Compact height: nav-inner shrinks from --header-height (4rem) → 3.25rem
+   when the user has scrolled past the threshold. Transitioning height on
+   .nav-inner rather than .site-header prevents a sticky-height recalculation
+   bug in Chrome where the sticky offset can jump when the element resizes.
+*/
+.site-header.is-scrolled .nav-inner {
+  height: 3.25rem;
+  transition: height var(--transition-mid);
+}
+
+/*
+   Logo scales down in compact state — desktop size.
+   Mirrors the old .site-header--compact .logo__img rule from styles.css.
+*/
+.site-header.is-scrolled .logo__img {
+  width:  calc(var(--logo-width-desktop)  * 0.82);
+  height: calc(var(--logo-height-desktop) * 0.82);
+}
+
+/* Tablet-adjusted compact logo */
+@media (max-width: 1024px) {
+  .site-header.is-scrolled .logo__img {
+    width:  calc(var(--logo-width-tablet)  * 0.85);
+    height: calc(var(--logo-height-tablet) * 0.85);
+  }
+}
+
+
+/* ── Inner row ───────────────────────────────────────────────────────────── */
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+  height: var(--header-height);
+  position: relative;
+
+  /* Smooth height collapse when .is-scrolled is applied to the header */
+  transition: height var(--transition-mid);
+}
+
+
+/* ── Logo ────────────────────────────────────────────────────────────────── */
+.logo {
+  display: inline-flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  opacity: 1;
+  transition: opacity var(--transition-fast);
+}
+
+.logo:hover {
+  opacity: 0.85;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.logo__wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-teal);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.logo__accent {
+  color: var(--color-terracotta);
+}
+
+.logo__tagline {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(47, 47, 47, 0.5);
+  line-height: 1;
+}
+
+
+/* ── Desktop nav ─────────────────────────────────────────────────────────── */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-link {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-charcoal);
+  text-decoration: none;
+  padding-bottom: 2px;
+  transition: color var(--transition-fast);
+  cursor: pointer;
+}
+
+/* Animated underline bar */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--color-terracotta);
+  border-radius: 2px;
+  transition: width 0.22s ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--color-terracotta);
+}
+
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  width: 100%;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+
+/* ── Hamburger Button ─────────────────────────────────────────────────────── */
+.hamburger-btn {
+  display: none; /* shown in responsive.css at ≤ 767px */
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;  /* WCAG 2.5.5 minimum touch target */
+  min-height: 44px;
+  padding: 0.3rem;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--color-teal);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.hamburger-btn[aria-expanded="true"] {
+  background: rgba(226, 114, 91, 0.09);
+}
+
+.hamburger-btn:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+}
+
+
+/* ── Hamburger SVG lines ─────────────────────────────────────────────────── */
+.hamburger-line {
+  transition: transform 0.24s ease, opacity 0.16s ease;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.hamburger-btn.is-open .hamburger-line--top {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-btn.is-open .hamburger-line--mid {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.is-open .hamburger-line--bottom {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+
+/* ── Mobile Drawer ───────────────────────────────────────────────────────── */
+/*
+   FIX v2: Explicitly override ALL conflicting properties from styles.css §15.
+   styles.css used: position:fixed + transform:translateX(100%) (slide-in)
+   navbar.css uses: position:absolute + max-height:0 (expand-down)
+   The transform was persisting and shoving the drawer off-screen to the right,
+   causing both invisible nav links and horizontal overflow on mobile.
+*/
+.mobile-drawer {
+  /* Position: drops directly below the sticky header */
+  position: absolute;
+  inset: auto;          /* FIX: reset inset shorthand from styles.css      */
+  top: 100%;
+  left: 0;
+  right: 0;
+  bottom: auto;
+
+  /* FIX: Reset the translateX(100%) inherited from styles.css */
+  transform: none !important;
+
+  background: var(--color-cream);
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* Expand-down animation */
+  max-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition:
+    max-height var(--transition-drawer),
+    visibility var(--transition-drawer);
+
+  z-index: calc(var(--header-z) - 1);
+}
+
+/* Open state — .is-open added by component.js */
+.mobile-drawer.is-open {
+  max-height: 80vh;
+  overflow-y: auto;  /* allow scroll if many links */
+  visibility: visible;
+}
+
+
+/* ── Mobile nav links ─────────────────────────────────────────────────────── */
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-charcoal);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast);
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
+}
+
+.mobile-nav-link:hover {
+  background: rgba(226, 114, 91, 0.04);
+  color: var(--color-charcoal);
+}
+
+.mobile-nav-link.is-active {
+  color: var(--color-terracotta);
+}
+
+.mobile-nav-link:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: -2px;
+}
+
+/* Active dot indicator */
+.mobile-nav-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.mobile-nav-link.is-active .mobile-nav-dot {
+  background: var(--color-terracotta);
+}
+
+/* Mobile CTA wrapper */
+.mobile-cta-wrap {
+  padding: 1rem 1.5rem 1.5rem;
+}

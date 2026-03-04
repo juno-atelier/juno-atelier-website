@@ -1,0 +1,109 @@
+<!-- ═══════════════════════════════════════════
+     components/footer.html
+     Injected into #footer-placeholder by components.js
+     #footer-year is filled automatically — do NOT hardcode the year.
+═══════════════════════════════════════════ -->
+<footer id="site-footer" class="site-footer" role="contentinfo" aria-labelledby="footer-brand-label">
+  <div class="container">
+    <div class="footer-grid">
+
+      <!-- Column 1: Brand / Logo -->
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo-link" aria-label="Juno Atelier — home">
+          <picture class="footer-logo-picture">
+            <img
+              src="assets/images/Juno.svg"
+              alt="Juno Atelier"
+              class="footer-logo__img"
+              width="200"
+              height="60"
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+          </picture>
+          <span class="footer-logo__fallback" aria-hidden="true">
+            <span class="footer-logo__fallback-primary">Juno Atelier</span>
+            <span class="footer-logo__fallback-tag">AI&#8209;augmented Studio</span>
+          </span>
+        </a>
+        <p id="footer-brand-label" class="footer-tagline">Strategy First · AI Accelerated · Human Refined</p>
+        <p class="footer-desc">A brand studio building the next generation of African businesses with clarity, strategy, and intelligence.</p>
+      </div>
+
+      <!-- Column 2: Contact -->
+      <div class="footer-contact">
+        <h4 class="footer-heading">Contact</h4>
+        <address class="footer-address">
+          <a href="mailto:hello@junoatelier.co" class="footer-link">hello@junoatelier.co</a>
+          <a href="tel:+254700123456"           class="footer-link">+254 700 123 456</a>
+          <span class="footer-address-text">Nairobi, Kenya</span>
+        </address>
+      </div>
+
+      <!-- Column 3: Follow Us -->
+      <div class="footer-social">
+        <h4 class="footer-heading">Follow Us</h4>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Follow us on Instagram"   rel="noopener noreferrer" target="_blank">IG</a>
+          <a href="#" class="social-link" aria-label="Follow us on LinkedIn"    rel="noopener noreferrer" target="_blank">LI</a>
+          <a href="#" class="social-link" aria-label="Follow us on X (Twitter)" rel="noopener noreferrer" target="_blank">X</a>
+        </div>
+      </div>
+
+    </div><!-- /.footer-grid -->
+
+    <!-- Footer Bottom Bar -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span>&copy; <span id="footer-year"></span> Juno Atelier. All rights reserved.</span>
+        <span class="footer-legal-divider" aria-hidden="true">|</span>
+        <div class="footer-legal-links">
+          <a href="privacy-policy.html" class="footer-link footer-legal-link">Privacy Policy</a>
+          <span class="footer-legal-divider" aria-hidden="true">|</span>
+          <a href="terms-of-service.html" class="footer-link footer-legal-link">Terms of Service</a>
+        </div>
+      </div>
+      <p class="footer-bottom-right footer-tagline-small">
+        Strategy First · AI Accelerated · Human Refined
+      </p>
+    </div><!-- /.footer-bottom -->
+
+    <!-- ── Credit Strip ──────────────────────────────────────────────────────
+         Slim tertiary row: "Made by [JUNO LOGO] with ♥"
+         Styled exclusively via footer-credit-strip.css (fc- prefix).
+         No JS required — purely declarative.
+    ─────────────────────────────────────────────────────────────────────── -->
+    <div
+      class="fc-strip"
+      role="contentinfo"
+      aria-label="Site credit"
+    >
+      <span class="fc-strip__text">Made&nbsp;by</span>
+
+      <a
+        href="https://junoatelier.co"
+        class="fc-strip__link"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Visit Juno Atelier — opens in a new tab"
+      >
+        <img
+          src="assets/images/Juno.svg"
+          alt="Juno Atelier"
+          class="fc-strip__logo"
+          width="80"
+          height="24"
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        >
+      </a>
+
+      <span class="fc-strip__text">
+        with&nbsp;<span class="fc-strip__heart" aria-hidden="true">♥</span>
+      </span>
+    </div><!-- /.fc-strip -->
+
+  </div><!-- /.container -->
+</footer>

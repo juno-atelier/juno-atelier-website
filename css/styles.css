@@ -1,0 +1,1027 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   styles.css — Global Reset · Brand Tokens · Typography · Base Layout
+                + Logo / Footer Implementation
+   Juno Atelier · Vanilla HTML / CSS / JS
+
+   CHANGE LOG:
+   FIX v3 — Sticky Navbar Unification
+   · §11 (.site-header, .site-header--compact) REMOVED — navbar.css is now
+     the single source of truth for all header / sticky styles.
+   · §12 duplicate .nav-inner REMOVED — defined exclusively in navbar.css.
+   · §13 .desktop-nav duplicate REMOVED — defined exclusively in navbar.css.
+   · §14 .hamburger-btn duplicate REMOVED — defined exclusively in navbar.css.
+   · §15 .mobile-drawer duplicate REMOVED — defined exclusively in navbar.css.
+   These sections caused silent cascade conflicts (wrong background colour,
+   competing transform vs max-height drawer animations, double scroll handlers).
+   All header-related interactivity is now co-located in navbar.css /
+   components.js for easier future maintenance.
+
+   FIX v4 — Footer Credit Strip Integration
+   · §23 added — fc- prefixed credit strip rules merged from the standalone
+     footer-credit-strip.css file. Co-locating them here removes the need
+     for a separate stylesheet link in every page <head>.
+   · footer-credit-strip.css can now be deleted from your project.
+   · .fc-strip also added to the §22 print rule so it's hidden when printing.
+═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   1. BRAND TOKENS (CSS Custom Properties)
+───────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── Core brand colours ───────────────────────────────────────────────── */
+  --color-terracotta:       #E2725B;
+  --color-terracotta-hover: #c55f4a;
+  --color-mustard:          #E1AD01;
+  --color-teal:             #1E3D42;
+  --color-cream:            #FDF6E9;
+  --color-charcoal:         #2F2F2F;
+  --color-white:            #ffffff;
+
+  /* ── Semantic / derived colours ──────────────────────────────────────── */
+  --color-text-primary:   #2F2F2F;
+  --color-text-secondary: #4a5568;
+  --color-text-muted:     #5a6a6c;
+  --color-border-light:   rgba(0, 0, 0, 0.06);
+  --color-border-mid:     rgba(0, 0, 0, 0.09);
+
+  /* ── Footer colours ──────────────────────────────────────────────────── */
+  --color-footer-bg:    #1e2e30;       /* Deep teal — brand-consistent dark bg  */
+  --color-footer-text:  #f0ede6;       /* Warm off-white for body text           */
+  --color-footer-muted: rgba(240, 237, 230, 0.5);
+  --color-footer-gold:  #E1AD01;       /* Mustard/gold accent for footer headings */
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* ── Spacing ─────────────────────────────────────────────────────────── */
+  --container-max: 1280px;
+  --container-pad: 1.5rem;
+  --section-pad:   5.5rem;
+
+  /* ── Spacing Scale (added for consistent vertical rhythm) ─────────────── */
+  --space-xs:  0.5rem;   /* 8px  */
+  --space-sm:  1rem;     /* 16px */
+  --space-md:  1.5rem;   /* 24px */
+  --space-lg:  2rem;     /* 32px */
+  --space-xl:  2.5rem;   /* 40px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+
+  /* ── Section spacing ─────────────────────────────────────────────────── */
+  --section-spacing:        3rem;   /* 48px - between major sections */
+  --section-spacing-mobile: 2rem;   /* 32px - mobile spacing          */
+
+  /* ── Border-radius ───────────────────────────────────────────────────── */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1.25rem;
+  --radius-xl:   1.5rem;
+  --radius-pill: 40px;
+
+  /* ── Transitions ─────────────────────────────────────────────────────── */
+  --transition-fast:   0.2s ease;
+  --transition-mid:    0.25s ease;
+  --transition-drawer: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Header ──────────────────────────────────────────────────────────── */
+  --header-height: 4rem;
+  --header-z:      100;
+
+  /* ── Logo sizing — header ─────────────────────────────────────────────── */
+  --logo-width-desktop:  160px;
+  --logo-width-tablet:   136px;
+  --logo-width-mobile:   110px;
+  --logo-height-desktop:  48px;
+  --logo-height-tablet:   41px;
+  --logo-height-mobile:   33px;
+
+  /* ── Logo sizing — footer ─────────────────────────────────────────────── */
+  /* UPDATED: increased from 140 × 42 px for stronger brand presence         */
+  --logo-footer-width:  200px;   /* was 140px (+43%)                         */
+  --logo-footer-height:  60px;   /* was  42px — proportionally scaled        */
+
+  /* ── Logo interaction ─────────────────────────────────────────────────── */
+  --logo-hover-scale: 1.05;
+  --logo-transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity   0.18s ease;
+
+  /* CSS filter to convert a full-colour logo to white for the dark footer.
+     Delete this variable and its usage once you have a logo-light.svg file. */
+  --logo-footer-filter: brightness(0) invert(1);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   2. BOX-SIZING RESET
+───────────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   3. ROOT / BODY
+───────────────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color:        var(--color-cream);
+  color:                   var(--color-text-primary);
+  font-family:             var(--font-body);
+  font-size:               1rem;
+  line-height:             1.6;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height:              100vh;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   4. REDUCED-MOTION PREFERENCE
+───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   5. BASE TYPOGRAPHY
+───────────────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+}
+
+p {
+  font-family: var(--font-body);
+}
+
+a {
+  color:           inherit;
+  text-decoration: none;
+}
+
+img, svg {
+  display:   block;
+  max-width: 100%;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   6. CONTAINER UTILITY
+───────────────────────────────────────────────────────────────────────── */
+.container {
+  max-width:      var(--container-max);
+  margin-inline:  auto;
+  padding-inline: var(--container-pad);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   7. SECTION SHARED TYPOGRAPHY
+───────────────────────────────────────────────────────────────────────── */
+.section-eyebrow {
+  font-family:    var(--font-body);
+  font-size:      0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color:          var(--color-terracotta);
+  font-weight:    600;
+  margin-bottom:  0.75rem;
+  text-align:     center;
+}
+
+.section-eyebrow--left {
+  text-align: left;
+}
+
+.section-heading {
+  font-family:   var(--font-display);
+  font-size:     clamp(1.9rem, 4vw, 2.6rem);
+  color:         var(--color-teal);
+  text-align:    center;
+  margin-bottom: 0.75rem;
+}
+
+.section-heading--left {
+  text-align: left;
+}
+
+.section-subtext {
+  text-align:    center;
+  color:         var(--color-text-muted);
+  max-width:     560px;
+  margin-inline: auto;
+  margin-bottom: 3.5rem;
+  font-size:     1rem;
+  line-height:   1.7;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   8. CTA BUTTON
+───────────────────────────────────────────────────────────────────────── */
+.cta-btn {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         0.6rem 1.35rem;
+  background:      var(--color-terracotta);
+  color:           var(--color-white);
+  font-family:     var(--font-body);
+  font-size:       0.875rem;
+  font-weight:     600;
+  border-radius:   var(--radius-sm);
+  text-decoration: none;
+  border:          1.5px solid transparent;
+  cursor:          pointer;
+  letter-spacing:  0.01em;
+  white-space:     nowrap;
+  transition:
+    background var(--transition-fast),
+    transform  var(--transition-fast),
+    box-shadow var(--transition-fast);
+  user-select: none;
+}
+
+.cta-btn:hover {
+  background: var(--color-terracotta-hover);
+  transform:  translateY(-2px);
+  box-shadow: 0 6px 18px rgba(226, 114, 91, 0.38);
+}
+
+.cta-btn:active {
+  transform:  translateY(0);
+  box-shadow: none;
+}
+
+.cta-btn:focus-visible {
+  outline:        2px solid var(--color-terracotta);
+  outline-offset: 3px;
+}
+
+.cta-btn--outline {
+  background:   transparent;
+  color:        var(--color-terracotta);
+  border-color: var(--color-terracotta);
+}
+
+.cta-btn--outline:hover {
+  background: rgba(226, 114, 91, 0.06);
+  box-shadow: none;
+}
+
+.cta-btn--full {
+  width: 100%;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   9. FOCUS-VISIBLE UTILITY
+───────────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline:        2px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius:  2px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   10. SHARED UTILITY CLASSES
+───────────────────────────────────────────────────────────────────────── */
+.about-cta-wrap {
+  margin-top: 1.75rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. HEADER / NAVBAR
+   ─────────────────────────────────────────────────────────────────────────
+   REMOVED (FIX v3): All rules previously here have been consolidated into
+   navbar.css, which is now the single source of truth for:
+
+     • .site-header         (position, z-index, background, transitions)
+     • .site-header--compact (superseded by .site-header.is-scrolled)
+     • .nav-inner            (flex row layout)
+     • .desktop-nav          (desktop link row)
+     • .hamburger-btn        (mobile toggle button)
+     • .mobile-drawer        (slide-down mobile menu)
+
+   Having these rules in BOTH files caused:
+     1. Background colour conflict — styles.css used --color-white while
+        navbar.css used --color-cream; styles.css won due to load order.
+     2. Two competing scroll handlers (initStickyHeader + initStickyNavbar)
+        each attaching separate passive listeners and writing to the same
+        DOM element on every scroll frame.
+     3. Drawer transform conflict — styles.css applied translateX(100%) via
+        a fixed-position approach; navbar.css used max-height expansion.
+        The transform persisted and pushed the drawer off-screen on mobile.
+
+   If you need to adjust any header style, edit navbar.css ONLY.
+═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   12. HEADER LOGO
+   (Logo image + fallback styles — kept here as they are page-layout
+    concerns shared across header and footer contexts)
+───────────────────────────────────────────────────────────────────────── */
+.logo--has-image {
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.5rem;
+  text-decoration: none;
+  flex-shrink:     0;
+  outline-offset:  4px;
+}
+
+.logo--has-image:focus-visible {
+  outline:        2px solid var(--color-terracotta);
+  outline-offset: 4px;
+  border-radius:  3px;
+}
+
+.logo__picture {
+  display:     block;
+  line-height: 0;
+}
+
+.logo__img {
+  display:         block;
+  width:           var(--logo-width-desktop);
+  height:          var(--logo-height-desktop);
+  max-width:       100%;
+  object-fit:      contain;
+  object-position: left center;
+  transition:      var(--logo-transition);
+  will-change:     transform;
+  background:      transparent;
+}
+
+.logo--has-image:hover         .logo__img,
+.logo--has-image:focus-visible .logo__img {
+  transform: scale(var(--logo-hover-scale));
+}
+
+.logo__fallback {
+  display: none;
+}
+
+.logo--img-error .logo__picture {
+  display: none;
+}
+
+.logo--img-error .logo__fallback {
+  display:        flex;
+  flex-direction: column;
+  line-height:    1.1;
+}
+
+.logo__fallback-primary {
+  font-family:    var(--font-display);
+  font-size:      1.25rem;
+  font-weight:    700;
+  color:          var(--color-teal);
+  letter-spacing: -0.01em;
+}
+
+.logo__accent {
+  color: var(--color-terracotta);
+}
+
+.logo__fallback-tag {
+  font-family:    var(--font-body);
+  font-size:      0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:          var(--color-text-muted);
+  font-weight:    600;
+}
+
+@media (max-width: 1024px) {
+  .logo__img {
+    width:  var(--logo-width-tablet);
+    height: var(--logo-height-tablet);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo__img {
+    width:  var(--logo-width-mobile);
+    height: var(--logo-height-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .logo__img {
+    width:  94px;
+    height: 28px;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   13–15. DESKTOP NAV / HAMBURGER / MOBILE DRAWER
+   REMOVED (FIX v3) — All rules moved to navbar.css.
+   See §11 comment above for full explanation.
+═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   16. FOOTER
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Footer shell ────────────────────────────────────────────────────────── */
+.site-footer {
+  background-color: var(--color-footer-bg, #1e2e30);
+  color:            var(--color-footer-text, #f0ede6);
+  padding-top:      4rem;
+  padding-bottom:   0;
+  margin-top:       0;
+}
+
+
+/* ── Footer grid ─────────────────────────────────────────────────────────── */
+.footer-grid {
+  display:               grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap:                   2.5rem 3rem;
+  padding-bottom:        3.5rem;
+  border-bottom:         1px solid rgba(225, 173, 1, 0.18);
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+
+/* ── Footer heading ──────────────────────────────────────────────────────── */
+.footer-heading {
+  font-family:    var(--font-body);
+  font-size:      0.72rem;
+  font-weight:    700;
+  color:          var(--color-footer-gold, #E1AD01);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom:  1rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   17. FOOTER LOGO
+═══════════════════════════════════════════════════════════════════════════ */
+.footer-logo-link {
+  display:         inline-flex;
+  align-items:     center;
+  margin-bottom:   1.25rem;
+  text-decoration: none;
+  outline-offset:  4px;
+}
+
+.footer-logo-link:focus-visible {
+  outline:        2px solid var(--color-footer-gold, #E1AD01);
+  border-radius:  3px;
+  outline-offset: 4px;
+}
+
+.footer-logo-picture {
+  display:     block;
+  line-height: 0;
+}
+
+.footer-logo__img {
+  display:         block;
+  width:           var(--logo-footer-width,  200px);
+  height:          var(--logo-footer-height,  60px);
+  object-fit:      contain;
+  object-position: left center;
+  max-width:       100%;
+  transition:      opacity 0.2s ease, transform 0.2s ease;
+  filter:          var(--logo-footer-filter);
+}
+
+.footer-logo-link:hover .footer-logo__img {
+  opacity:   0.82;
+  transform: translateY(-1px);
+}
+
+.footer-logo__fallback {
+  display: none;
+}
+
+.footer-logo--img-error .footer-logo-picture {
+  display: none;
+}
+
+.footer-logo--img-error .footer-logo__fallback {
+  display:        flex;
+  flex-direction: column;
+  line-height:    1.1;
+}
+
+.footer-logo__fallback-primary {
+  font-family:    var(--font-display);
+  font-size:      1.3rem;
+  font-weight:    700;
+  color:          var(--color-footer-gold, #E1AD01);
+  letter-spacing: -0.01em;
+}
+
+.footer-logo__fallback-tag {
+  font-family:    var(--font-body);
+  font-size:      0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:          var(--color-footer-muted, rgba(240, 237, 230, 0.5));
+  font-weight:    600;
+  margin-top:     0.2rem;
+}
+
+@media (max-width: 768px) {
+  .footer-logo__img {
+    width:  160px;
+    height:  48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-logo__img {
+    width:  130px;
+    height:  39px;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   18. FOOTER BRAND COLUMN CONTENT
+───────────────────────────────────────────────────────────────────────── */
+.footer-tagline {
+  font-size:      0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color:          var(--color-footer-gold, #E1AD01);
+  font-weight:    600;
+  margin-bottom:  0.85rem;
+  line-height:    1.5;
+}
+
+.footer-desc {
+  font-size:   0.88rem;
+  line-height: 1.7;
+  color:       var(--color-footer-muted, rgba(240, 237, 230, 0.55));
+  max-width:   32ch;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   19. FOOTER CONTACT COLUMN
+───────────────────────────────────────────────────────────────────────── */
+.footer-address {
+  font-style:     normal;
+  display:        flex;
+  flex-direction: column;
+  gap:            0.55rem;
+}
+
+.footer-link {
+  font-size:       0.88rem;
+  color:           var(--color-footer-text, #f0ede6);
+  text-decoration: none;
+  transition:      color 0.18s ease;
+  line-height:     1.5;
+}
+
+.footer-link:hover {
+  color: var(--color-footer-gold, #E1AD01);
+}
+
+.footer-link:focus-visible {
+  outline:        2px solid var(--color-footer-gold, #E1AD01);
+  outline-offset: 2px;
+  border-radius:  2px;
+}
+
+.footer-address-text {
+  font-size:   0.85rem;
+  line-height: 1.65;
+  color:       var(--color-footer-muted, rgba(240, 237, 230, 0.5));
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   20. FOOTER SOCIAL COLUMN
+───────────────────────────────────────────────────────────────────────── */
+.social-links {
+  display:       flex;
+  gap:           0.6rem;
+  margin-bottom: 0;
+}
+
+.social-link {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  width:           36px;
+  height:          36px;
+  border-radius:   50%;
+  border:          1.5px solid rgba(225, 173, 1, 0.3);
+  color:           var(--color-footer-text, #f0ede6);
+  font-size:       0.68rem;
+  font-weight:     700;
+  letter-spacing:  0.04em;
+  text-decoration: none;
+  transition:
+    border-color 0.2s ease,
+    color        0.2s ease,
+    background   0.2s ease;
+}
+
+.social-link:hover {
+  border-color: var(--color-footer-gold, #E1AD01);
+  color:        var(--color-footer-gold, #E1AD01);
+  background:   rgba(225, 173, 1, 0.08);
+}
+
+.social-link:focus-visible {
+  outline:        2px solid var(--color-footer-gold, #E1AD01);
+  outline-offset: 2px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   21. FOOTER BOTTOM BAR
+   FIX: Added the three missing rule blocks (.footer-bottom-left,
+   .footer-legal-links, .footer-legal-divider) that were entirely absent
+   from the original file. Their absence caused the browser to default to
+   block/column layout, splitting the legal links onto a separate line and
+   rendering a phantom horizontal divider between them.
+───────────────────────────────────────────────────────────────────────── */
+
+/* ── Outer bar — space-between flex row ─────────────────────────────────── */
+.footer-bottom {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  flex-wrap:       wrap;
+  gap:             0.75rem;
+  padding:         1.25rem 0;
+  font-size:       0.78rem;
+  color:           var(--color-footer-muted, rgba(240, 237, 230, 0.42));
+}
+
+/* ── Left side — copyright + pipe + legal links on ONE line ─────────────── */
+.footer-bottom-left {
+  display:        flex;
+  align-items:    center;
+  flex-direction: row;
+  flex-wrap:      wrap;
+  gap:            0.5rem;
+  margin:         0;
+  padding:        0;
+  border:         none;
+}
+
+/* ── Legal links wrapper — Privacy Policy | Terms inline ────────────────── */
+.footer-legal-links {
+  display:     flex;
+  align-items: center;
+  gap:         0.4rem;
+}
+
+/* ── Pipe characters between items ──────────────────────────────────────── */
+.footer-legal-divider {
+  color:       rgba(240, 237, 230, 0.3);
+  font-size:   0.78rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ── Legal link styling ──────────────────────────────────────────────────── */
+.footer-legal-link {
+  font-size:       0.78rem;
+  color:           var(--color-footer-muted, rgba(240, 237, 230, 0.42));
+  text-decoration: none;
+  transition:      color 0.18s ease;
+}
+
+.footer-legal-link:hover {
+  color: var(--color-footer-gold, #E1AD01);
+}
+
+.footer-legal-link:focus-visible {
+  outline:        2px solid var(--color-footer-gold, #E1AD01);
+  outline-offset: 2px;
+  border-radius:  2px;
+}
+
+/* ── Right side tagline ──────────────────────────────────────────────────── */
+.footer-bottom-right {
+  font-size:   0.75rem;
+  color:       var(--color-footer-muted, rgba(240, 237, 230, 0.38));
+  text-align:  right;
+  margin:      0;
+  flex-shrink: 0;
+}
+
+/* ── Mobile — stack gracefully ───────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items:    center;
+    text-align:     center;
+  }
+
+  .footer-bottom-right {
+    text-align: center;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   22. PRINT STYLES
+═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  .site-header,
+  .hamburger-btn,
+  .mobile-drawer,
+  .fc-strip {                     /* FIX v4: credit strip hidden when printing */
+    display: none;
+  }
+
+  body {
+    font-size:  12pt;
+    background: white;
+    color:      #1a1a1a;
+  }
+
+  a[href]::after {
+    content:   " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  /* Restore full-colour logos when printing */
+  .logo__img,
+  .footer-logo__img {
+    filter:                     none;
+    print-color-adjust:         exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .site-footer {
+    background: white   !important;
+    color:      #1a1a1a !important;
+  }
+
+  .footer-link,
+  .footer-address-text,
+  .footer-tagline,
+  .footer-desc,
+  .footer-bottom {
+    color: #1a1a1a !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   23. FOOTER CREDIT STRIP
+   ─────────────────────────────────────────────────────────────────────────
+   Slim tertiary row below .footer-bottom: "Made by [JUNO LOGO] with ♥"
+   All selectors use the fc- prefix (footer-credit) for complete isolation —
+   zero risk of collision with existing .footer-* rules in §16–21.
+
+   SCOPE NOTES
+   · No global resets or tag selectors — fully scoped to .fc-* classes.
+   · All token references resolve to variables already declared in §1 :root,
+     so no additional custom properties are introduced.
+   · Keyframes are prefixed fc- to prevent collision with any animation names
+     that may exist in other stylesheets (e.g. "heartbeat", "flicker").
+
+   DESIGN TOKEN MAPPING (source site → Juno Atelier)
+   --gold                           → var(--color-mustard)        #E1AD01
+   rgba(255,255,255,0.06) border    → rgba(225,173,1,0.12)        gold-tinted
+   var(--heading-font)              → var(--font-body)             Inter
+   var(--transition-base) = 0.3s   → var(--transition-mid)        0.25s ease
+
+   MERGED FROM: footer-credit-strip.css — that file can now be deleted.
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Strip container ──────────────────────────────────────────────────────── */
+/*
+   Slim centred row below .footer-bottom.
+   Gold-tinted border-top aligns with the footer's existing gold divider
+   language (rgba(225,173,1,0.18) on .footer-grid) rather than the source's
+   plain rgba(255,255,255,0.06).
+*/
+.fc-strip {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-wrap:       wrap;          /* graceful reflow on narrow screens */
+  gap:             0.5rem;
+  padding-top:     1rem;
+  padding-bottom:  1.25rem;       /* FIX v5: lifts strip clear of viewport edge */
+  margin-top:      1rem;
+  border-top:      1px solid rgba(225, 173, 1, 0.12);
+}
+
+
+/* ── Label text ("Made by" / "with ♥") ──────────────────────────────────── */
+.fc-strip__text {
+  font-family:    var(--font-body);
+  font-size:      0.75rem;
+  color:          var(--color-footer-muted, rgba(240, 237, 230, 0.5));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space:    nowrap;
+  line-height:    1;
+}
+
+
+/* ── Heart glyph — five-layer red glow + heartbeat pulse ─────────────────── */
+/*
+   Five-layer glow: tight inner halo collapsing out to a wide bloom.
+   Layer order: innermost (sharpest) → outermost (widest spread).
+*/
+.fc-strip__heart {
+  color:       #ff2020;
+  font-size:   1rem;
+  line-height: 1;
+  text-shadow:
+    0 0  4px rgba(255,  30,  30, 1.00),
+    0 0  8px rgba(255,  30,  30, 0.90),
+    0 0 16px rgba(255,  50,  50, 0.70),
+    0 0 28px rgba(255,  60,  60, 0.45),
+    0 0 48px rgba(255,  80,  80, 0.20);
+  animation: fc-heartbeat 2.4s ease-in-out infinite;
+}
+
+
+/* ── Logo link wrapper ────────────────────────────────────────────────────── */
+.fc-strip__link {
+  display:         inline-flex;
+  align-items:     center;
+  text-decoration: none;
+  border-radius:   4px;
+  outline-offset:  3px;
+  transition:      opacity var(--transition-mid, 0.25s ease);
+}
+
+/* Keyboard focus ring — uses footer gold accent for consistency */
+.fc-strip__link:focus-visible {
+  outline: 2px solid var(--color-mustard, #E1AD01);
+}
+
+
+/* ── Logo image — candle / neon-tube flicker ──────────────────────────────
+   brightness(0) invert(1) in every keyframe bakes pure white into the logo.
+   The flicker modulates opacity + drop-shadow intensity at irregular %
+   stops to feel genuinely unsteady rather than a simple repeating pulse.
+   Hover: pauses the flicker and locks to a steady full-bright glow.
+────────────────────────────────────────────────────────────────────────── */
+.fc-strip__logo {
+  display:     block;
+  height:      26px;
+  width:       auto;
+  object-fit:  contain;
+  animation:   fc-juno-flicker 2.8s linear infinite;
+  transition:
+    filter  var(--transition-mid, 0.25s ease),
+    opacity var(--transition-mid, 0.25s ease);
+}
+
+/* Hover: pause the flicker, snap to steady full-bright state */
+.fc-strip__link:hover .fc-strip__logo {
+  animation-play-state: paused;
+  opacity: 1;
+  filter:
+    brightness(0) invert(1)
+    drop-shadow(0 0  8px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 20px rgba(255, 255, 255, 0.55))
+    drop-shadow(0 0 38px rgba(255, 255, 255, 0.22));
+}
+
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+/* ≤ 768px — tighten gap when strip wraps to two lines */
+@media (max-width: 768px) {
+  .fc-strip {
+    gap: 0.35rem;
+  }
+
+  .fc-strip__logo {
+    height: 22px;
+  }
+}
+
+/* ≤ 480px — reduce strip spacing to keep footer compact */
+@media (max-width: 480px) {
+  .fc-strip {
+    padding-top:    0.75rem;
+    padding-bottom: 1rem;         /* FIX v5: proportional bottom lift on mobile */
+    margin-top:     0.75rem;
+  }
+
+  .fc-strip__text {
+    font-size: 0.68rem;
+  }
+}
+
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+/*
+   Users who prefer reduced motion still see the full credit strip — just
+   without the flicker and heartbeat animations. A static white filter
+   keeps the logo visible and legible.
+
+   NOTE: The global §4 reduced-motion block above already suppresses
+   animation-duration via the * selector. These rules are a belt-and-braces
+   defence for the fc- animations in case the * override is ever scoped or
+   removed downstream.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .fc-strip__logo {
+    animation: none;
+    /* Keep the white + subtle static glow so the logo remains visible */
+    filter:
+      brightness(0) invert(1)
+      drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));
+    opacity: 0.9;
+  }
+
+  .fc-strip__heart {
+    animation: none;
+  }
+}
+
+
+/* ── Keyframe animations ──────────────────────────────────────────────────
+   Both keyframes carry the fc- prefix to guarantee zero collision with any
+   existing keyframe names on the page ("heartbeat", "flicker", etc.).
+────────────────────────────────────────────────────────────────────────── */
+
+/*
+   fc-juno-flicker
+   Irregular opacity + glow pulses at non-uniform % stops to feel genuinely
+   unsteady. brightness(0) invert(1) in every frame keeps the logo pure white.
+   19 keyframe stops replicate the source design exactly — no visual regression.
+*/
+@keyframes fc-juno-flicker {
+  0%   { opacity: 0.92; filter: brightness(0) invert(1) drop-shadow(0 0  7px rgba(255,255,255,0.70)) drop-shadow(0 0 16px rgba(255,255,255,0.30)); }
+  4%   { opacity: 0.50; filter: brightness(0) invert(1) drop-shadow(0 0  2px rgba(255,255,255,0.20)) drop-shadow(0 0  4px rgba(255,255,255,0.10)); }
+  8%   { opacity: 0.88; filter: brightness(0) invert(1) drop-shadow(0 0  8px rgba(255,255,255,0.65)) drop-shadow(0 0 18px rgba(255,255,255,0.28)); }
+  12%  { opacity: 0.95; filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.80)) drop-shadow(0 0 22px rgba(255,255,255,0.35)); }
+  19%  { opacity: 0.40; filter: brightness(0) invert(1) drop-shadow(0 0  1px rgba(255,255,255,0.15)) drop-shadow(0 0  2px rgba(255,255,255,0.08)); }
+  21%  { opacity: 0.85; filter: brightness(0) invert(1) drop-shadow(0 0  6px rgba(255,255,255,0.60)) drop-shadow(0 0 14px rgba(255,255,255,0.25)); }
+  28%  { opacity: 0.90; filter: brightness(0) invert(1) drop-shadow(0 0  9px rgba(255,255,255,0.72)) drop-shadow(0 0 20px rgba(255,255,255,0.30)); }
+  35%  { opacity: 0.55; filter: brightness(0) invert(1) drop-shadow(0 0  3px rgba(255,255,255,0.25)) drop-shadow(0 0  6px rgba(255,255,255,0.12)); }
+  37%  { opacity: 0.93; filter: brightness(0) invert(1) drop-shadow(0 0  8px rgba(255,255,255,0.68)) drop-shadow(0 0 18px rgba(255,255,255,0.28)); }
+  45%  { opacity: 0.96; filter: brightness(0) invert(1) drop-shadow(0 0 11px rgba(255,255,255,0.82)) drop-shadow(0 0 24px rgba(255,255,255,0.38)); }
+  52%  { opacity: 0.45; filter: brightness(0) invert(1) drop-shadow(0 0  2px rgba(255,255,255,0.18)) drop-shadow(0 0  4px rgba(255,255,255,0.08)); }
+  54%  { opacity: 0.88; filter: brightness(0) invert(1) drop-shadow(0 0  7px rgba(255,255,255,0.62)) drop-shadow(0 0 16px rgba(255,255,255,0.26)); }
+  62%  { opacity: 0.91; filter: brightness(0) invert(1) drop-shadow(0 0  9px rgba(255,255,255,0.74)) drop-shadow(0 0 20px rgba(255,255,255,0.32)); }
+  70%  { opacity: 0.60; filter: brightness(0) invert(1) drop-shadow(0 0  3px rgba(255,255,255,0.28)) drop-shadow(0 0  7px rgba(255,255,255,0.12)); }
+  72%  { opacity: 0.94; filter: brightness(0) invert(1) drop-shadow(0 0  8px rgba(255,255,255,0.70)) drop-shadow(0 0 18px rgba(255,255,255,0.30)); }
+  79%  { opacity: 0.42; filter: brightness(0) invert(1) drop-shadow(0 0  1px rgba(255,255,255,0.15)) drop-shadow(0 0  3px rgba(255,255,255,0.08)); }
+  81%  { opacity: 0.87; filter: brightness(0) invert(1) drop-shadow(0 0  6px rgba(255,255,255,0.60)) drop-shadow(0 0 14px rgba(255,255,255,0.25)); }
+  88%  { opacity: 0.93; filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,255,255,0.78)) drop-shadow(0 0 22px rgba(255,255,255,0.34)); }
+  95%  { opacity: 0.50; filter: brightness(0) invert(1) drop-shadow(0 0  2px rgba(255,255,255,0.20)) drop-shadow(0 0  5px rgba(255,255,255,0.10)); }
+  100% { opacity: 0.92; filter: brightness(0) invert(1) drop-shadow(0 0  7px rgba(255,255,255,0.70)) drop-shadow(0 0 16px rgba(255,255,255,0.30)); }
+}
+
+/*
+   fc-heartbeat
+   Natural double-beat pulse: primary swell → contract → secondary swell → hold.
+   Scale stays at 1.18× maximum to keep the heart subtle within the strip.
+*/
+@keyframes fc-heartbeat {
+  0%,  40%, 100% { transform: scale(1);    opacity: 1;    }
+  20%             { transform: scale(1.18); opacity: 0.85; }
+  60%             { transform: scale(1.10); opacity: 0.90; }
+}

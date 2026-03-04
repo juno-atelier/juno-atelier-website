@@ -1,0 +1,928 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   services.css — Services page specific styles
+   Juno Atelier · Vanilla HTML/CSS/JS Conversion
+   Maintains brand consistency with existing design system
+
+   PATCH v2 CHANGES:
+   · FIX 1 — .package-includes li::before is now the sole tick renderer.
+              The duplicate ✓ text nodes have been removed from the HTML,
+              so this ::before rule must NOT be removed.
+   · FIX 2 — .package-card--full and all old retainer-* rules replaced by
+              the new .retainer-block / .retainer-tiers / .retainer-tier-card
+              system. Each tier is a self-contained card column.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════
+   SERVICES HERO SECTION
+═══════════════════════════════════════════ */
+.services-hero-section {
+  padding: 7rem 0 4rem;
+  position: relative;
+  background: var(--color-cream);
+  overflow: hidden;
+}
+
+.services-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.services-hero-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  color: var(--color-teal);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.services-hero-text {
+  font-size: 1.15rem;
+  color: var(--color-text-secondary);
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.services-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-terracotta);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.services-hero-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.decoration-circle {
+  position: absolute;
+  top: -100px;
+  right: -50px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: var(--color-terracotta);
+  opacity: 0.03;
+}
+
+.decoration-triangle {
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 200px;
+  height: 200px;
+  background: var(--color-mustard);
+  opacity: 0.03;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* ═══════════════════════════════════════════
+   PHILOSOPHY SECTION
+═══════════════════════════════════════════ */
+.philosophy-section {
+  padding: 5rem 0;
+  background: var(--color-white);
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.philosophy-text {
+  max-width: 520px;
+}
+
+.philosophy-description {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  margin-top: 1.5rem;
+}
+
+.philosophy-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.philosophy-stat-card {
+  background: var(--color-cream);
+  padding: 2rem 1.5rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform var(--transition-mid), box-shadow var(--transition-mid);
+}
+
+.philosophy-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-warm);
+}
+
+.stat-highlight {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-terracotta);
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.philosophy-stat-card p {
+  font-size: 0.9rem;
+  color: var(--color-teal);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════
+   SERVICE MENU SECTION (Complete Grid)
+═══════════════════════════════════════════ */
+.service-menu-section {
+  padding: 5rem 0;
+  background: var(--color-cream);
+}
+
+.service-category-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 2.5rem 0 3rem;
+}
+
+.category-filter-btn {
+  background: transparent;
+  border: 1px solid rgba(30, 61, 66, 0.2);
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-teal);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.category-filter-btn:hover {
+  border-color: var(--color-terracotta);
+  color: var(--color-terracotta);
+}
+
+.category-filter-btn.is-active {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+  color: var(--color-cream);
+}
+
+.services-complete-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.75rem;
+}
+
+.service-detailed-card {
+  background: var(--color-white);
+  padding: 2rem 1.75rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform var(--transition-mid), box-shadow var(--transition-mid);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-detailed-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: var(--color-terracotta);
+  transition: height var(--transition-mid);
+}
+
+.service-detailed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+
+.service-detailed-card:hover::before {
+  height: 100%;
+}
+
+.service-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.service-detailed-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-teal);
+  margin: 0;
+}
+
+.service-detailed-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.service-detailed-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.service-price {
+  font-weight: 700;
+  color: var(--color-terracotta);
+  font-size: 1.1rem;
+}
+
+.service-timeline {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: rgba(30, 61, 66, 0.05);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+/* ═══════════════════════════════════════════
+   PACKAGES SECTION
+═══════════════════════════════════════════ */
+.packages-section {
+  padding: 5rem 0;
+  background: var(--color-white);
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+/* ── Package card base ──────────────────────────────────── */
+.package-card {
+  background: var(--color-cream);
+  padding: 2.5rem 2rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: transform var(--transition-mid), box-shadow var(--transition-mid);
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-warm);
+}
+
+.package-card--featured {
+  background: var(--color-white);
+  box-shadow: 0 12px 30px rgba(226, 114, 91, 0.12);
+  transform: scale(1.02);
+  border: 1px solid var(--color-terracotta);
+  z-index: 2;
+}
+
+.package-card--featured:hover {
+  transform: scale(1.02) translateY(-4px);
+}
+
+.package-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: var(--color-mustard);
+  color: var(--color-teal);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 1rem;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.package-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-teal);
+  margin-bottom: 0.5rem;
+  padding-right: 5rem;
+}
+
+.package-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.package-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.25rem;
+}
+
+.price-range {
+  font-weight: 700;
+  color: var(--color-terracotta);
+  font-size: 1.1rem;
+}
+
+.price-timeline {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  background: rgba(30, 61, 66, 0.05);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+}
+
+/* ── Single tick — CSS-only fix, works with the ORIGINAL HTML ───────────────
+   The original HTML has "✓ Item text" inside each <li>.
+   The old ::before also injected "✓", causing double ticks.
+
+   FIX: Remove ::before entirely. Use ::first-letter on a block <li> to
+   colour only the ✓ glyph terracotta. No HTML changes required.
+──────────────────────────────────────────────────────────────────────────── */
+.package-includes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  flex-grow: 1;
+}
+
+.package-includes li {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.6rem;
+  display: block;          /* ::first-letter requires block, not flex */
+  padding-left: 0;
+  line-height: 1.6;
+}
+
+/* Colour only the leading ✓ character — single tick, terracotta, no ::before */
+.package-includes li::first-letter {
+  color: var(--color-terracotta);
+  font-weight: 700;
+  margin-right: 0.35em;
+}
+
+/* No ::before tick — disabled completely */
+.package-includes li::before {
+  content: none;
+}
+
+.package-cta {
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ═══════════════════════════════════════════
+   FIX 2 — MARKETING RETAINERS REDESIGN
+   ───────────────────────────────────────────
+   Replaces the old .package-card--full 3-column grid where tier names were
+   isolated labels with no associated content. The new structure gives each
+   tier its own self-contained card (badge + feature list + CTA).
+═══════════════════════════════════════════ */
+
+/* ── Outer block — spans all columns in .packages-grid ─────────────────── */
+.retainer-block {
+  grid-column: 1 / -1;
+  background: var(--color-cream);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Header row ─────────────────────────────────────────────────────────── */
+.retainer-block__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(30, 61, 66, 0.08);
+}
+
+.retainer-block__title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-teal);
+  margin: 0;
+}
+
+.retainer-block__subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── Three-column tier grid ─────────────────────────────────────────────── */
+.retainer-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+/* ── Individual tier card ───────────────────────────────────────────────── */
+.retainer-tier-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: transform var(--transition-mid), box-shadow var(--transition-mid);
+}
+
+.retainer-tier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+}
+
+/* Featured middle tier — mirrors the featured package card language */
+.retainer-tier-card--featured {
+  border-color: var(--color-terracotta);
+  box-shadow: 0 8px 24px rgba(226, 114, 91, 0.10);
+}
+
+.retainer-tier-card--featured:hover {
+  box-shadow: 0 16px 32px rgba(226, 114, 91, 0.15);
+}
+
+/* ── Tier badge ─────────────────────────────────────────────────────────── */
+.retainer-tier-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.35rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Essential — subtle teal tint */
+.retainer-tier-card__badge--essential {
+  background: rgba(30, 61, 66, 0.07);
+  color: var(--color-teal);
+}
+
+/* Growth — terracotta accent (matches featured border) */
+.retainer-tier-card__badge--growth {
+  background: var(--color-terracotta);
+  color: var(--color-white);
+}
+
+/* Unlimited — mustard gold */
+.retainer-tier-card__badge--unlimited {
+  background: var(--color-mustard);
+  color: var(--color-teal);
+}
+
+/* Push CTA to bottom regardless of list length */
+.retainer-tier-card .package-includes {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.retainer-tier-card .package-cta {
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ═══════════════════════════════════════════
+   PROCESS TIMELINE (5-Stage)
+═══════════════════════════════════════════ */
+.process-section {
+  padding: 5rem 0;
+  background: var(--color-cream);
+}
+
+.process-timeline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.process-step {
+  flex: 1 1 160px;
+  max-width: 200px;
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform var(--transition-mid);
+  position: relative;
+}
+
+.process-step:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-warm);
+}
+
+.step-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-mustard);
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-teal);
+  margin-bottom: 0.5rem;
+}
+
+.step-description {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════
+   PRICING SECTION
+═══════════════════════════════════════════ */
+.pricing-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, var(--color-cream) 0%, #f8efe0 100%);
+}
+
+.pricing-card {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 3rem;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(30, 61, 66, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pricing-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--color-teal);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.pricing-text {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 2.5rem;
+  line-height: 1.8;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pricing-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  text-align: left;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.pricing-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-teal);
+}
+
+.feature-icon {
+  color: var(--color-terracotta);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════
+   INDUSTRIES SECTION
+═══════════════════════════════════════════ */
+.industries-section {
+  padding: 5rem 0;
+  background: var(--color-white);
+}
+
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.industry-item {
+  background: var(--color-cream);
+  padding: 2rem 1rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: transform var(--transition-mid);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.industry-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-warm);
+}
+
+.industry-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.industry-name {
+  font-weight: 600;
+  color: var(--color-teal);
+  font-size: 0.95rem;
+}
+
+/* ═══════════════════════════════════════════
+   SERVICES CTA SECTION
+═══════════════════════════════════════════ */
+.services-cta-section {
+  padding: 4rem 0 6rem;
+  background: var(--color-cream);
+}
+
+.services-cta-card {
+  background: var(--color-teal);
+  color: var(--color-cream);
+  padding: 4rem 3rem;
+  border-radius: var(--radius-xl);
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 20px 40px rgba(30, 61, 66, 0.2);
+}
+
+.services-cta-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: var(--color-cream);
+}
+
+.services-cta-text {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.services-cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.services-cta-buttons .cta-btn {
+  background: var(--color-cream);
+  color: var(--color-teal);
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+}
+
+.services-cta-buttons .cta-btn--outline {
+  background: transparent;
+  color: var(--color-cream);
+  border: 2px solid var(--color-cream);
+}
+
+.services-cta-buttons .cta-btn--outline:hover {
+  background: rgba(253, 246, 233, 0.1);
+}
+
+.response-note {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  margin-top: 1rem;
+}
+
+.cta-btn--large {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+═══════════════════════════════════════════ */
+
+/* ── Packages grid — 2 columns on tablet ───────────────── */
+@media (max-width: 1100px) {
+  .packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .package-card--featured {
+    transform: scale(1);
+  }
+
+  .package-card--featured:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* ── Philosophy grid ────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .philosophy-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .philosophy-text {
+    max-width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── Retainer tiers — 2-col at 900px ───────────────────── */
+@media (max-width: 900px) {
+  .retainer-tiers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Unlimited tier spans both columns on tablet */
+  .retainer-tier-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── General mobile ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .services-hero-section {
+    padding: 6rem 0 3rem;
+  }
+
+  .services-hero-stats {
+    gap: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .philosophy-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .service-category-filter {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 1rem;
+  }
+
+  .category-filter-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .services-complete-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-timeline {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .process-step {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .pricing-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .pricing-features {
+    grid-template-columns: 1fr;
+  }
+
+  .services-cta-card {
+    padding: 3rem 1.5rem;
+  }
+
+  .services-cta-title {
+    font-size: 1.8rem;
+  }
+
+  .services-cta-buttons {
+    flex-direction: column;
+  }
+
+  .services-cta-buttons .cta-btn {
+    width: 100%;
+  }
+}
+
+/* ── Retainer tiers — single column on mobile ───────────── */
+@media (max-width: 600px) {
+  .retainer-block {
+    padding: 2rem 1.25rem;
+  }
+
+  .retainer-tiers {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reset the tablet last-child span */
+  .retainer-tier-card:last-child {
+    grid-column: auto;
+  }
+
+  /* Surface the featured Growth card first on mobile */
+  .retainer-tier-card--featured {
+    order: -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-detailed-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .industries-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,87 @@
+<!-- ═══════════════════════════════════════════
+     components/navbar.html
+     Injected into #navbar-placeholder by components.js
+     Active link is set automatically — do NOT hardcode is-active here.
+═══════════════════════════════════════════ -->
+<header id="site-header" class="site-header" role="banner">
+  <div class="nav-inner">
+
+    <!-- Logo -->
+    <a
+      href="index.html"
+      class="logo logo--has-image"
+      aria-label="Juno Atelier — home"
+    >
+      <picture class="logo__picture">
+        <img
+          src="assets/images/Juno.svg"
+          alt="Juno Atelier Logo"
+          class="logo__img"
+          width="160"
+          height="48"
+          loading="eager"
+          decoding="async"
+          draggable="false"
+          onerror="this.closest('.logo--has-image').classList.add('logo--img-error')"
+        />
+      </picture>
+      <!-- Text fallback — visible only when image fails to load -->
+      <span class="logo__fallback" aria-hidden="true">
+        <span class="logo__fallback-primary">Juno <span class="logo__accent">Atelier</span></span>
+        <span class="logo__fallback-tag">Nairobi · AI&#8209;augmented Studio</span>
+      </span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="index.html"     class="nav-link" data-page="index.html">Home</a>
+      <a href="about.html"     class="nav-link" data-page="about.html">About Us</a>
+      <a href="services.html"  class="nav-link" data-page="services.html">Services</a>
+      <a href="portfolio.html" class="nav-link" data-page="portfolio.html">Our Portfolio</a>
+      <a href="contact.html"   class="nav-link" data-page="contact.html">Contact</a>
+    </nav>
+
+    <!-- Desktop CTA -->
+    <a href="brand-audit.html" class="cta-btn desktop-cta" aria-label="Book a brand audit">
+      Book Brand Audit
+    </a>
+
+    <!-- Mobile Hamburger -->
+    <button
+      type="button"
+      id="hamburger-btn"
+      class="hamburger-btn"
+      aria-expanded="false"
+      aria-controls="mobile-drawer"
+      aria-label="Open menu"
+    >
+      <svg class="hamburger-icon" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
+        <line class="hamburger-line hamburger-line--top"    x1="2" y1="4"  x2="20" y2="4"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="hamburger-line hamburger-line--mid"    x1="2" y1="11" x2="20" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line class="hamburger-line hamburger-line--bottom" x1="2" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+  </div><!-- /.nav-inner -->
+
+  <!-- Mobile Drawer -->
+  <div
+    id="mobile-drawer"
+    class="mobile-drawer"
+    aria-hidden="true"
+    role="region"
+    aria-label="Mobile navigation"
+  >
+    <nav aria-label="Mobile navigation links">
+      <a href="index.html"     class="mobile-nav-link" data-page="index.html">Home <span class="mobile-nav-dot" aria-hidden="true"></span></a>
+      <a href="about.html"     class="mobile-nav-link" data-page="about.html">About Us <span class="mobile-nav-dot" aria-hidden="true"></span></a>
+      <a href="services.html"  class="mobile-nav-link" data-page="services.html">Services <span class="mobile-nav-dot" aria-hidden="true"></span></a>
+      <a href="portfolio.html" class="mobile-nav-link" data-page="portfolio.html">Our Portfolio <span class="mobile-nav-dot" aria-hidden="true"></span></a>
+      <a href="contact.html"   class="mobile-nav-link" data-page="contact.html">Contact <span class="mobile-nav-dot" aria-hidden="true"></span></a>
+      <div class="mobile-cta-wrap">
+        <a href="brand-audit.html" class="cta-btn cta-btn--full">Book Brand Audit</a>
+      </div>
+    </nav>
+  </div><!-- /#mobile-drawer -->
+
+</header>

@@ -1,0 +1,488 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Juno Atelier — AI-augmented brand studio based in Nairobi. Book a free brand audit or send us a message." />
+  <title>Juno Atelier · Contact · AI-Augmented Brand Studio · Nairobi</title>
+
+  <!-- Favicon -->
+   <!-- ── Favicons ─────────────────────────────────────────────────────────── -->
+<link rel="icon"             type="image/svg+xml" href="assets/images/favicon.svg" />
+<link rel="icon"             type="image/png"     href="assets/images/JA arts.svg" sizes="32x32" />
+<link rel="apple-touch-icon"                      href="assets/images/JA Apple.svg" sizes="180x180" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/contact.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/fab.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR PLACEHOLDER
+       components.js fetches components/navbar.html
+       and injects it here automatically.
+  ═══════════════════════════════════════════ -->
+  <div id="navbar-placeholder"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT — CONTACT PAGE
+  ═══════════════════════════════════════════ -->
+  <main>
+
+    <!-- ── Contact Hero ── -->
+    <section id="contact-hero" class="contact-hero-section" aria-labelledby="contact-hero-heading">
+      <div class="container contact-hero-inner">
+
+        <div class="contact-hero-text">
+          <span class="section-eyebrow section-eyebrow--left">Connect With Us</span>
+          <h1 id="contact-hero-heading" class="contact-hero-heading">
+            Let's Work<br />
+            <em class="hero-heading__accent">Together</em>
+          </h1>
+          <p class="contact-hero-body">
+            Every great brand begins with a conversation. Let's explore what's possible for yours.
+          </p>
+          <div class="contact-hero-tags">
+            <span class="contact-tag">📍 Based in Nairobi</span>
+            <span class="contact-tag">🌍 Serving Worldwide</span>
+            <span class="contact-tag">⚡ 24-48h Response</span>
+          </div>
+        </div>
+
+        <div class="contact-hero-visual" aria-hidden="true">
+  <img
+    src="assets/images/contact hero.svg"
+    alt="Get in touch with Juno Atelier"
+    class="contact-hero-img"
+    loading="eager"
+    decoding="async"
+  />
+</div>
+
+      </div>
+    </section>
+
+    <!-- ── Contact Form + Details ── -->
+    <section id="contact-form-section" class="contact-form-section" aria-labelledby="contact-form-heading">
+      <div class="container">
+        <div class="contact-form-grid">
+
+          <!-- Left: Form -->
+          <div class="contact-form-container">
+            <span class="section-eyebrow section-eyebrow--left">Send a Message</span>
+            <h2 id="contact-form-heading" class="section-heading">Start the Conversation</h2>
+
+            <form id="contact-form" class="contact-form" novalidate aria-label="Contact form">
+              <div class="form-row form-row--two">
+                <div class="form-group">
+                  <label for="name" class="form-label">Full Name <span class="form-required" aria-hidden="true">*</span></label>
+                  <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required autocomplete="name" aria-required="true" />
+                  <span class="form-error" role="alert" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="email" class="form-label">Email Address <span class="form-required" aria-hidden="true">*</span></label>
+                  <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
+                  <span class="form-error" role="alert" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row--two">
+                <div class="form-group">
+                  <label for="company" class="form-label">Company / Brand</label>
+                  <input type="text" id="company" name="company" class="form-input" placeholder="Your company name" autocomplete="organization" />
+                </div>
+                <div class="form-group">
+                  <label for="service" class="form-label">Service Interested In</label>
+                  <select id="service" name="service" class="form-select">
+                    <option value="" disabled selected>Select a service…</option>
+                    <option value="brand-strategy">Brand Strategy</option>
+                    <option value="visual-identity">Visual Identity</option>
+                    <option value="brand-audit">Brand Audit</option>
+                    <option value="ai-brand-accelerator">AI Brand Accelerator</option>
+                    <option value="content-strategy">Content Strategy</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message" class="form-label">Message <span class="form-required" aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="Tell us about your brand, goals, or questions…" required aria-required="true"></textarea>
+                <span class="form-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <button type="submit" class="cta-btn cta-btn--full contact-submit-btn">Send Message</button>
+              <p class="form-privacy-note">We respect your privacy. Your information is never shared with third parties.</p>
+            </form>
+          </div>
+
+          <!-- Right: Details -->
+          <div class="contact-details-container">
+
+            <div class="contact-info-card">
+              <div class="contact-info__bar" aria-hidden="true"></div>
+              <h3 class="contact-info__title">Contact Information</h3>
+
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📧</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Email</span>
+                  <a href="mailto:hello@junoatelier.co" class="contact-info-link">hello@junoatelier.co</a>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📱</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Phone</span>
+                  <a href="tel:+254700123456" class="contact-info-link">+254 700 123 456</a>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📍</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Location</span>
+                  <span class="contact-info-text">Nairobi, Kenya</span>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">⏰</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Response Time</span>
+                  <span class="contact-info-text">24-48 hours</span>
+                </div>
+              </div>
+
+              <div class="contact-payment-methods">
+                <h4 class="contact-payment-title">We Accept</h4>
+                <div class="payment-method-tags">
+                  <span class="payment-tag">M-PESA (Lipa Na M-PESA)</span>
+                  <span class="payment-tag">Bank Transfer</span>
+                  <span class="payment-tag">PayPal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-cta-card">
+              <div class="contact-cta-icon" aria-hidden="true">🎯</div>
+              <h3 class="contact-cta-title">Book a Free Brand Audit</h3>
+              <p class="contact-cta-text">Every great brand begins with a conversation. Book your free 30-minute brand audit call.</p>
+              <a href="brand-audit.html" class="cta-btn cta-btn--full contact-cta-btn">Schedule Your Call</a>
+              <p class="contact-cta-note">(Calendly link placeholder)</p>
+            </div>
+
+            <div class="contact-social-block">
+              <h4 class="contact-social-title">Connect With Us</h4>
+              <div class="contact-social-grid">
+                <a href="#" class="contact-social-item" aria-label="LinkedIn"  rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">in</span><span>LinkedIn</span>
+                </a>
+                <a href="#" class="contact-social-item" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">ig</span><span>Instagram</span>
+                </a>
+                <a href="#" class="contact-social-item" aria-label="Behance"   rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">be</span><span>Behance</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Map Section ── -->
+    <section class="contact-map-section" aria-labelledby="map-heading">
+      <div class="container">
+        <span class="section-eyebrow">Our Base</span>
+        <h2 id="map-heading" class="section-heading">Based in Nairobi, Kenya</h2>
+        <p class="section-subtext">Serving clients worldwide with local understanding and global quality.</p>
+        <div class="map-container">
+  <iframe
+    class="map-iframe"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255281.19891888956!2d36.70730744863283!3d-1.3028617999999952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2ske!4v1700000000000"
+    width="100%"
+    height="100%"
+    style="border: 0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Juno Atelier — Nairobi, Kenya"
+  ></iframe>
+</div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER PLACEHOLDER
+       components.js fetches components/footer.html
+       and injects it here automatically.
+  ═══════════════════════════════════════════ -->
+  <div id="footer-placeholder"></div>
+
+
+  <!-- Scripts — components.js must load first -->
+<script src="js/component.js"></script>
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/contact.js"></script>
+
+</body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Juno Atelier — AI-augmented brand studio based in Nairobi. Book a free brand audit or send us a message." />
+  <title>Juno Atelier · Contact · AI-Augmented Brand Studio · Nairobi</title>
+
+  <!-- Favicon -->
+   <!-- ── Favicons ─────────────────────────────────────────────────────────── -->
+<link rel="icon"             type="image/svg+xml" href="assets/images/favicon.svg" />
+<link rel="icon"             type="image/png"     href="assets/images/JA arts.svg" sizes="32x32" />
+<link rel="apple-touch-icon"                      href="assets/images/JA Apple.svg" sizes="180x180" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/contact.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/fab.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR PLACEHOLDER
+       components.js fetches components/navbar.html
+       and injects it here automatically.
+  ═══════════════════════════════════════════ -->
+  <div id="navbar-placeholder"></div>
+
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT — CONTACT PAGE
+  ═══════════════════════════════════════════ -->
+  <main>
+
+    <!-- ── Contact Hero ── -->
+    <section id="contact-hero" class="contact-hero-section" aria-labelledby="contact-hero-heading">
+      <div class="container contact-hero-inner">
+
+        <div class="contact-hero-text">
+          <span class="section-eyebrow section-eyebrow--left">Connect With Us</span>
+          <h1 id="contact-hero-heading" class="contact-hero-heading">
+            Let's Work<br />
+            <em class="hero-heading__accent">Together</em>
+          </h1>
+          <p class="contact-hero-body">
+            Every great brand begins with a conversation. Let's explore what's possible for yours.
+          </p>
+          <div class="contact-hero-tags">
+            <span class="contact-tag">📍 Based in Nairobi</span>
+            <span class="contact-tag">🌍 Serving Worldwide</span>
+            <span class="contact-tag">⚡ 24-48h Response</span>
+          </div>
+        </div>
+
+        <div class="contact-hero-visual" aria-hidden="true">
+  <img
+    src="assets/images/contact hero.svg"
+    alt="Get in touch with Juno Atelier"
+    class="contact-hero-img"
+    loading="eager"
+    decoding="async"
+  />
+</div>
+
+      </div>
+    </section>
+
+    <!-- ── Contact Form + Details ── -->
+    <section id="contact-form-section" class="contact-form-section" aria-labelledby="contact-form-heading">
+      <div class="container">
+        <div class="contact-form-grid">
+
+          <!-- Left: Form -->
+          <div class="contact-form-container">
+            <span class="section-eyebrow section-eyebrow--left">Send a Message</span>
+            <h2 id="contact-form-heading" class="section-heading">Start the Conversation</h2>
+
+            <form id="contact-form" class="contact-form" novalidate aria-label="Contact form">
+              <div class="form-row form-row--two">
+                <div class="form-group">
+                  <label for="name" class="form-label">Full Name <span class="form-required" aria-hidden="true">*</span></label>
+                  <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required autocomplete="name" aria-required="true" />
+                  <span class="form-error" role="alert" aria-live="polite"></span>
+                </div>
+                <div class="form-group">
+                  <label for="email" class="form-label">Email Address <span class="form-required" aria-hidden="true">*</span></label>
+                  <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
+                  <span class="form-error" role="alert" aria-live="polite"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row--two">
+                <div class="form-group">
+                  <label for="company" class="form-label">Company / Brand</label>
+                  <input type="text" id="company" name="company" class="form-input" placeholder="Your company name" autocomplete="organization" />
+                </div>
+                <div class="form-group">
+                  <label for="service" class="form-label">Service Interested In</label>
+                  <select id="service" name="service" class="form-select">
+                    <option value="" disabled selected>Select a service…</option>
+                    <option value="brand-strategy">Brand Strategy</option>
+                    <option value="visual-identity">Visual Identity</option>
+                    <option value="brand-audit">Brand Audit</option>
+                    <option value="ai-brand-accelerator">AI Brand Accelerator</option>
+                    <option value="content-strategy">Content Strategy</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message" class="form-label">Message <span class="form-required" aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="Tell us about your brand, goals, or questions…" required aria-required="true"></textarea>
+                <span class="form-error" role="alert" aria-live="polite"></span>
+              </div>
+
+              <button type="submit" class="cta-btn cta-btn--full contact-submit-btn">Send Message</button>
+              <p class="form-privacy-note">We respect your privacy. Your information is never shared with third parties.</p>
+            </form>
+          </div>
+
+          <!-- Right: Details -->
+          <div class="contact-details-container">
+
+            <div class="contact-info-card">
+              <div class="contact-info__bar" aria-hidden="true"></div>
+              <h3 class="contact-info__title">Contact Information</h3>
+
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📧</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Email</span>
+                  <a href="mailto:hello@junoatelier.co" class="contact-info-link">hello@junoatelier.co</a>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📱</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Phone</span>
+                  <a href="tel:+254700123456" class="contact-info-link">+254 700 123 456</a>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">📍</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Location</span>
+                  <span class="contact-info-text">Nairobi, Kenya</span>
+                </div>
+              </div>
+              <div class="contact-info-item">
+                <span class="contact-info-icon" aria-hidden="true">⏰</span>
+                <div class="contact-info-content">
+                  <span class="contact-info-label">Response Time</span>
+                  <span class="contact-info-text">24-48 hours</span>
+                </div>
+              </div>
+
+              <div class="contact-payment-methods">
+                <h4 class="contact-payment-title">We Accept</h4>
+                <div class="payment-method-tags">
+                  <span class="payment-tag">M-PESA (Lipa Na M-PESA)</span>
+                  <span class="payment-tag">Bank Transfer</span>
+                  <span class="payment-tag">PayPal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-cta-card">
+              <div class="contact-cta-icon" aria-hidden="true">🎯</div>
+              <h3 class="contact-cta-title">Book a Free Brand Audit</h3>
+              <p class="contact-cta-text">Every great brand begins with a conversation. Book your free 30-minute brand audit call.</p>
+              <a href="brand-audit.html" class="cta-btn cta-btn--full contact-cta-btn">Schedule Your Call</a>
+              <p class="contact-cta-note">(Calendly link placeholder)</p>
+            </div>
+
+            <div class="contact-social-block">
+              <h4 class="contact-social-title">Connect With Us</h4>
+              <div class="contact-social-grid">
+                <a href="#" class="contact-social-item" aria-label="LinkedIn"  rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">in</span><span>LinkedIn</span>
+                </a>
+                <a href="#" class="contact-social-item" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">ig</span><span>Instagram</span>
+                </a>
+                <a href="#" class="contact-social-item" aria-label="Behance"   rel="noopener noreferrer" target="_blank">
+                  <span class="contact-social-item-icon" aria-hidden="true">be</span><span>Behance</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Map Section ── -->
+    <section class="contact-map-section" aria-labelledby="map-heading">
+      <div class="container">
+        <span class="section-eyebrow">Our Base</span>
+        <h2 id="map-heading" class="section-heading">Based in Nairobi, Kenya</h2>
+        <p class="section-subtext">Serving clients worldwide with local understanding and global quality.</p>
+        <div class="map-container">
+  <iframe
+    class="map-iframe"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255281.19891888956!2d36.70730744863283!3d-1.3028617999999952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi%2C%20Kenya!5e0!3m2!1sen!2ske!4v1700000000000"
+    width="100%"
+    height="100%"
+    style="border: 0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Juno Atelier — Nairobi, Kenya"
+  ></iframe>
+</div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER PLACEHOLDER
+       components.js fetches components/footer.html
+       and injects it here automatically.
+  ═══════════════════════════════════════════ -->
+  <div id="footer-placeholder"></div>
+
+
+  <!-- Scripts — components.js must load first -->
+<script src="js/component.js"></script>
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/contact.js"></script>
+
+</body>
+>>>>>>> 7297e49f1c19ecdb0a97e00c4c51fd263c0e7830
+</html>

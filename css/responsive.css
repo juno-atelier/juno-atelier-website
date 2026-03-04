@@ -1,0 +1,548 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   responsive.css — Media queries and responsive breakpoints
+   Juno Atelier · Vanilla HTML/CSS/JS Conversion
+
+   Breakpoints:
+     Smartwatch: 0 – 199px    (Apple Watch, Wear OS — ultra-minimal)
+     Mobile:  200 – 767px     (hamburger menu, stacked layouts)
+     Tablet:  768 – 1023px    (2-col grids, optional hybrid nav)
+     Desktop: 1024px+         (full nav, multi-col)
+
+   FIX v2:
+   - Added global overflow-x handling to prevent horizontal scroll caused
+     by the .mobile-drawer transform conflict (now resolved in navbar.css,
+     but this acts as a safety net for any other overflowing elements)
+   - Removed duplicate .footer-* rules (footer is styled in styles.css only)
+   - Removed .mobile-drawer { display:none !important } on desktop — the
+     drawer is now controlled by max-height/visibility in navbar.css, so
+     forcing display:none on desktop was conflicting with the open animation
+
+   FIX v3:
+   - overflow-x on <html> changed from 'hidden' → 'clip'
+     'hidden' creates a scroll container which silently breaks
+     position:sticky — the navbar would scroll away instead of
+     staying fixed at the top. 'clip' prevents horizontal overflow
+     WITHOUT creating a scroll container, so sticky works correctly.
+───────────────────────────────────────────────────────────────────────────── */
+
+
+/* ══════════════════════════════════════════════════════════════════
+   GLOBAL — prevent horizontal overflow on all viewports
+
+   WHY clip on html, hidden on body:
+   • overflow-x:hidden on <html> creates a new scroll container →
+     position:sticky children stop sticking and scroll with the page.
+   • overflow-x:clip does NOT create a scroll container, so sticky
+     positioning is preserved while still clipping any overflowing
+     elements at the viewport edge.
+   • overflow-x:hidden on <body> is safe and prevents any scrollbar
+     from appearing on touch devices.
+══════════════════════════════════════════════════════════════════ */
+html,
+body {
+  overflow-x: clip;
+  /*
+     BOTH must use 'clip' not 'hidden'.
+     overflow-x:hidden on EITHER html or body creates a scroll container
+     which silently breaks position:sticky on child elements — the navbar
+     scrolls away instead of staying pinned. 'clip' prevents horizontal
+     overflow without creating a scroll container, preserving sticky.
+  */
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   SMARTWATCH  (≤ 199px)
+   Targets: Apple Watch (136–198px wide), Wear OS (192px typical)
+   Design philosophy:
+   - Show ONLY the brand name and one CTA — nothing else
+   - No nav, no hamburger, no footer columns, no hero visuals
+   - Single column, maximum font legibility, huge tap targets
+   - Circular screen safe-area padding via env() where supported
+══════════════════════════════════════════════════════════════════ */
+@media (max-width: 199px) {
+
+  /* ── Root tokens — scale everything down ────────────── */
+  :root {
+    --container-pad:  0.5rem;
+    --header-height:  2.5rem;
+    --section-pad:    1.25rem;
+    --radius-md:      0.5rem;
+    --radius-lg:      0.5rem;
+    --radius-xl:      0.5rem;
+  }
+
+  /* ── Global base ────────────────────────────────────── */
+  html, body {
+    font-size: 10px;       /* base for rem units — everything scales down */
+    overflow-x: hidden;
+  }
+
+  /* Safe-area inset for circular watch faces */
+  .container {
+    padding-inline: max(0.5rem, env(safe-area-inset-left, 0.5rem));
+    padding-block:  max(0.25rem, env(safe-area-inset-top, 0.25rem));
+  }
+
+  /* ── Header — ultra compact ─────────────────────────── */
+  .site-header {
+    height: var(--header-height);
+    border-bottom: none;
+    box-shadow: none;
+    background: var(--color-cream);
+  }
+
+  .nav-inner {
+    height: var(--header-height);
+    padding-inline: 0.4rem;
+    gap: 0.25rem;
+  }
+
+  /* Hide everything in nav except the logo */
+  .desktop-nav,
+  .desktop-cta,
+  .hamburger-btn,
+  .mobile-drawer {
+    display: none !important;
+  }
+
+  /* Shrink logo text to fit */
+  .logo__wordmark {
+    font-size: 0.85rem;
+  }
+
+  .logo__tagline {
+    display: none;   /* too small to read at this size */
+  }
+
+  /* ── Hero — stripped to essentials ─────────────────── */
+  .hero-section {
+    padding: 1rem 0 0.75rem;
+  }
+
+  .hero-inner {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Hide decorative visual entirely */
+  .hero-visual,
+  .hero-gradient,
+  .hero-badge {
+    display: none;
+  }
+
+  .hero-text {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero-heading {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-heading__accent {
+    display: block;
+  }
+
+  .hero-body {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    max-width: 100%;
+  }
+
+  /* One CTA only — make it full width and easy to tap */
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .hero-ctas .cta-btn {
+    font-size: 0.7rem;
+    padding: 0.6rem 0.5rem;
+    min-height: 36px;   /* minimum tap target for watch crown interaction */
+    text-align: center;
+    border-radius: var(--radius-md);
+  }
+
+  /* Hide the outline/secondary CTA — screen too small for two */
+  .hero-ctas .cta-btn--outline {
+    display: none;
+  }
+
+  /* ── Values strip — hide entirely ──────────────────── */
+  .values-strip {
+    display: none;
+  }
+
+  /* ── Services — single card, no grid ───────────────── */
+  .services-section {
+    padding: 1rem 0;
+  }
+
+  .section-eyebrow {
+    font-size: 0.55rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .section-heading {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .section-subtext {
+    font-size: 0.7rem;
+    margin-bottom: 1rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .service-card {
+    padding: 0.85rem 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .service-card__icon {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 0.5rem;
+  }
+
+  .service-card__title {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .service-card__desc {
+    font-size: 0.65rem;
+    line-height: 1.4;
+  }
+
+  .service-card__price {
+    font-size: 0.7rem;
+    margin-top: 0.6rem;
+  }
+
+  /* ── Process — hide step details, show numbers only ── */
+  .process-section {
+    padding: 1rem 0;
+  }
+
+  .process-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .step-card {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+    padding: 0.6rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+  }
+
+  .step-card__num {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .step-card__text {
+    font-size: 0.65rem;
+  }
+
+  /* ── About — text only, no portrait ────────────────── */
+  .about-section {
+    padding: 1rem 0;
+  }
+
+  .about-inner {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Hide founder portrait — too large for watch screen */
+  .founder-portrait {
+    display: none;
+  }
+
+  .about-body {
+    font-size: 0.7rem;
+    line-height: 1.5;
+    margin-bottom: 0.6rem;
+  }
+
+  .about-tags {
+    gap: 0.3rem;
+    margin-top: 0.6rem;
+  }
+
+  .about-tag {
+    font-size: 0.55rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .about-cta-wrap {
+    margin-top: 0.75rem;
+  }
+
+  /* ── Footer — absolute minimum ──────────────────────── */
+  .site-footer {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Hide grid columns — show only brand name + copyright */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  /* Hide contact and social columns on watch */
+  .footer-grid > *:not(:first-child) {
+    display: none;
+  }
+
+  .footer-logo-link {
+    margin-bottom: 0.4rem;
+  }
+
+  .footer-logo__img {
+    width: 80px;
+    height: 24px;
+  }
+
+  .footer-tagline {
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+
+  .footer-desc {
+    font-size: 0.6rem;
+    line-height: 1.4;
+    max-width: 100%;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+    padding: 0.6rem 0;
+    font-size: 0.55rem;
+  }
+
+  /* Hide tagline and legal links — keep only copyright */
+  .footer-bottom-right,
+  .footer-legal-links,
+  .footer-legal-divider {
+    display: none;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE  (≤ 767px)
+══════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* ── Navigation ─────────────────────────────────────── */
+  .desktop-nav,
+  .desktop-cta {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: inline-flex;
+  }
+
+  /* ── Hero ───────────────────────────────────────────── */
+  .hero-section {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .hero-inner {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .hero-text {
+    flex: none;
+    width: 100%;
+  }
+
+  .hero-visual {
+    flex: none;
+    width: 100%;
+    min-height: 240px;
+  }
+
+  .hero-body {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-ctas .cta-btn {
+    text-align: center;
+  }
+
+  /* ── Values ─────────────────────────────────────────── */
+  .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* ── Services ───────────────────────────────────────── */
+  .services-section {
+    padding: 3.5rem 0;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Process ────────────────────────────────────────── */
+  .process-section {
+    padding: 3.5rem 0;
+  }
+
+  .process-grid {
+    gap: 1rem;
+  }
+
+  .step-card {
+    flex: 1 1 130px;
+    max-width: 160px;
+    padding: 1.5rem 1rem;
+  }
+
+  /* ── About ──────────────────────────────────────────── */
+  .about-section {
+    padding: 3.5rem 0;
+  }
+
+  .about-inner {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .about-text {
+    flex: none;
+    width: 100%;
+  }
+
+  .founder-portrait {
+    flex: none;
+    width: 100%;
+    min-height: 240px;
+  }
+
+  /* ── Section text ───────────────────────────────────── */
+  .section-subtext {
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── Container padding on very small screens ────────── */
+  .container {
+    padding-inline: 1rem;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   TABLET  (768px – 1023px)
+══════════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  /* ── Navigation ─────────────────────────────────────── */
+  .desktop-nav {
+    gap: 1.25rem;
+  }
+
+  .hamburger-btn {
+    display: none;
+  }
+
+  /* ── Hero ───────────────────────────────────────────── */
+  .hero-inner {
+    gap: 2rem;
+  }
+
+  .hero-visual {
+    min-height: 300px;
+  }
+
+  /* ── Values ─────────────────────────────────────────── */
+  .values-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* ── Services ───────────────────────────────────────── */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ── Process ────────────────────────────────────────── */
+  .process-grid {
+    gap: 1rem;
+  }
+
+  .step-card {
+    flex: 1 1 140px;
+    max-width: 190px;
+  }
+
+  /* ── Footer ─────────────────────────────────────────── */
+  .footer-brand {
+    grid-column: 1 / -1; /* full width on first row */
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   DESKTOP  (≥ 1024px)
+══════════════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+
+  .hamburger-btn {
+    display: none;
+  }
+
+  /*
+     FIX: Removed `display: none !important` on .mobile-drawer here.
+     The drawer is now hidden via max-height:0 + visibility:hidden in
+     navbar.css, which is a cleaner approach that doesn't break the
+     open/close animation if the drawer is ever triggered on desktop.
+  */
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   LARGE DESKTOP  (≥ 1280px)
+══════════════════════════════════════════════════════════════════ */
+@media (min-width: 1280px) {
+
+  :root {
+    --container-pad: 2rem;
+  }
+}
