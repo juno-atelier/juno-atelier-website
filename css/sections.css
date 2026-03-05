@@ -12,6 +12,7 @@
 ══════════════════════════════════════════════════════════════════ */
 .hero-section {
   padding: 5rem 0 4rem;
+  margin-top: 0;           /* FIX: prevent gap between navbar and hero */
   position: relative;
   overflow: hidden;
 }

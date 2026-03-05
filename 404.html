@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Page not found — Juno Atelier. The page you're looking for doesn't exist." />
+  <title>Juno Atelier · 404 · Page Not Found</title>
+
+  <!-- ── Favicons ─────────────────────────────────────────────────────────── -->
+  <link rel="icon"             type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="icon"             type="image/png"     href="assets/images/JA arts.svg" sizes="32x32" />
+  <link rel="apple-touch-icon"                      href="assets/images/JA Apple.svg" sizes="180x180" />
+
+  <!-- ── Google Fonts ─────────────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap"
+  />
+
+  <!-- ── Global Stylesheets ───────────────────────────────────────────────── -->
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/fab.css" />
+
+  <!-- ── 404-specific styles ───────────────────────────────────────────────── -->
+  <style>
+    /* ── Page layout ───────────────────────────────────────────────────────── */
+    .error-page {
+      min-height:      100vh;
+      display:         flex;
+      flex-direction:  column;
+    }
+
+    .error-main {
+      flex:            1;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      padding:         6rem var(--container-pad) 4rem;
+      position:        relative;
+      overflow:        hidden;
+    }
+
+    /* ── Decorative background geometry ────────────────────────────────────── */
+    .error-bg {
+      position: absolute;
+      inset:    0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index:  0;
+    }
+
+    .error-bg__circle {
+      position:      absolute;
+      border-radius: 50%;
+      opacity:       0.06;
+    }
+
+    .error-bg__circle--1 {
+      width:      600px;
+      height:     600px;
+      background: var(--color-terracotta);
+      top:        -180px;
+      right:      -140px;
+      animation:  drift1 18s ease-in-out infinite alternate;
+    }
+
+    .error-bg__circle--2 {
+      width:      400px;
+      height:     400px;
+      background: var(--color-mustard);
+      bottom:     -120px;
+      left:       -80px;
+      animation:  drift2 22s ease-in-out infinite alternate;
+    }
+
+    .error-bg__circle--3 {
+      width:      200px;
+      height:     200px;
+      background: var(--color-teal);
+      top:        40%;
+      left:       55%;
+      opacity:    0.04;
+      animation:  drift3 14s ease-in-out infinite alternate;
+    }
+
+    /* Diagonal grid lines — subtle brand texture */
+    .error-bg__grid {
+      position:         absolute;
+      inset:            0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 48px,
+        rgba(30, 61, 66, 0.028) 48px,
+        rgba(30, 61, 66, 0.028) 49px
+      );
+    }
+
+    @keyframes drift1 { from { transform: translate(0, 0) scale(1);     } to { transform: translate(-30px, 20px) scale(1.06); } }
+    @keyframes drift2 { from { transform: translate(0, 0) scale(1);     } to { transform: translate(20px, -25px) scale(1.04); } }
+    @keyframes drift3 { from { transform: translate(0, 0);              } to { transform: translate(-18px, 18px);             } }
+
+    /* ── Content card ───────────────────────────────────────────────────────── */
+    .error-content {
+      position:   relative;
+      z-index:    1;
+      text-align: center;
+      max-width:  640px;
+      animation:  fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ── Eyebrow ─────────────────────────────────────────────────────────────── */
+    .error-eyebrow {
+      display:        inline-flex;
+      align-items:    center;
+      gap:            0.5rem;
+      font-family:    var(--font-body);
+      font-size:      0.72rem;
+      font-weight:    600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color:          var(--color-terracotta);
+      margin-bottom:  1.5rem;
+    }
+
+    .error-eyebrow::before,
+    .error-eyebrow::after {
+      content:    '';
+      display:    block;
+      width:      32px;
+      height:     1px;
+      background: var(--color-terracotta);
+      opacity:    0.5;
+    }
+
+    /* ── Giant 404 numeral ──────────────────────────────────────────────────── */
+    .error-numeral {
+      font-family:    var(--font-display);
+      font-size:      clamp(7rem, 20vw, 13rem);
+      font-weight:    700;
+      line-height:    0.9;
+      letter-spacing: -0.04em;
+      color:          transparent;
+      /* Gradient fill using brand colours */
+      background:     linear-gradient(
+        135deg,
+        var(--color-teal)       0%,
+        var(--color-terracotta) 55%,
+        var(--color-mustard)    100%
+      );
+      -webkit-background-clip: text;
+      background-clip:         text;
+      margin-bottom:           1.5rem;
+      position:                relative;
+      display:                 inline-block;
+    }
+
+    /* Stacked ghost numeral for depth */
+    .error-numeral::after {
+      content:    '404';
+      position:   absolute;
+      inset:      0;
+      color:      var(--color-teal);
+      opacity:    0.04;
+      transform:  translate(6px, 6px);
+      z-index:    -1;
+      /* Undo clip on the ghost — it needs to be visible */
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip:         unset;
+      -webkit-text-fill-color: var(--color-teal);
+    }
+
+    /* ── Heading ────────────────────────────────────────────────────────────── */
+    .error-heading {
+      font-family:   var(--font-display);
+      font-size:     clamp(1.6rem, 4vw, 2.2rem);
+      color:         var(--color-teal);
+      margin-bottom: 1rem;
+      line-height:   1.2;
+    }
+
+    .error-heading em {
+      font-style:  italic;
+      color:       var(--color-terracotta);
+    }
+
+    /* ── Body text ──────────────────────────────────────────────────────────── */
+    .error-body {
+      font-size:     1rem;
+      line-height:   1.75;
+      color:         var(--color-text-secondary);
+      margin-bottom: 2.5rem;
+      max-width:     48ch;
+      margin-inline: auto;
+    }
+
+    /* ── CTA group ──────────────────────────────────────────────────────────── */
+    .error-cta-group {
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      flex-wrap:       wrap;
+      gap:             0.85rem;
+      margin-bottom:   3rem;
+    }
+
+    /* ── Quick-links row ────────────────────────────────────────────────────── */
+    .error-links {
+      display:     flex;
+      flex-wrap:   wrap;
+      gap:         0.5rem 1.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .error-links__label {
+      width:          100%;
+      font-size:      0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color:          var(--color-text-muted);
+      margin-bottom:  0.25rem;
+    }
+
+    .error-link {
+      font-size:       0.875rem;
+      font-weight:     500;
+      color:           var(--color-teal);
+      text-decoration: none;
+      border-bottom:   1.5px solid rgba(30, 61, 66, 0.2);
+      padding-bottom:  1px;
+      transition:
+        color        var(--transition-fast),
+        border-color var(--transition-fast);
+    }
+
+    .error-link:hover {
+      color:        var(--color-terracotta);
+      border-color: var(--color-terracotta);
+    }
+
+    /* ── Decorative divider ─────────────────────────────────────────────────── */
+    .error-divider {
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      gap:             1rem;
+      margin:          2rem 0;
+      color:           var(--color-text-muted);
+      font-size:       0.72rem;
+      letter-spacing:  0.12em;
+      text-transform:  uppercase;
+    }
+
+    .error-divider::before,
+    .error-divider::after {
+      content:    '';
+      flex:       1;
+      max-width:  80px;
+      height:     1px;
+      background: var(--color-border-mid);
+    }
+
+    /* ── Floating brand shape — purely decorative ───────────────────────────── */
+    .error-ornament {
+      position:   absolute;
+      right:      6%;
+      bottom:     10%;
+      opacity:    0.07;
+      animation:  spin 60s linear infinite;
+      z-index:    0;
+      pointer-events: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .error-main {
+        padding-top:    5rem;
+        padding-bottom: 3rem;
+      }
+
+      .error-cta-group {
+        flex-direction: column;
+        align-items:    stretch;
+      }
+
+      .error-cta-group .cta-btn {
+        text-align: center;
+      }
+
+      .error-ornament {
+        display: none;
+      }
+    }
+
+    /* ── Reduced motion ─────────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .error-bg__circle--1,
+      .error-bg__circle--2,
+      .error-bg__circle--3 { animation: none; }
+      .error-content        { animation: none; }
+      .error-ornament       { animation: none; }
+    }
+  </style>
+</head>
+<body class="error-page">
+
+  <!-- ── Navbar ───────────────────────────────────────────────────────────── -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- ── Main 404 content ─────────────────────────────────────────────────── -->
+  <main class="error-main" aria-labelledby="error-heading">
+
+    <!-- Decorative background -->
+    <div class="error-bg" aria-hidden="true">
+      <div class="error-bg__grid"></div>
+      <div class="error-bg__circle error-bg__circle--1"></div>
+      <div class="error-bg__circle error-bg__circle--2"></div>
+      <div class="error-bg__circle error-bg__circle--3"></div>
+    </div>
+
+    <!-- Floating ornament -->
+    <svg class="error-ornament" aria-hidden="true" width="260" height="260" viewBox="0 0 260 260" fill="none">
+      <polygon points="130,10 250,200 10,200" stroke="#1E3D42" stroke-width="1.5" fill="none"/>
+      <polygon points="130,40 225,195 35,195" stroke="#E2725B" stroke-width="1" fill="none"/>
+      <circle cx="130" cy="130" r="90" stroke="#E1AD01" stroke-width="1" fill="none"/>
+      <circle cx="130" cy="130" r="60" stroke="#1E3D42" stroke-width="0.75" fill="none"/>
+    </svg>
+
+    <!-- Content -->
+    <div class="error-content">
+
+      <p class="error-eyebrow">Error 404</p>
+
+      <div class="error-numeral" aria-hidden="true">404</div>
+
+      <h1 id="error-heading" class="error-heading">
+        This page took a <em>wrong turn.</em>
+      </h1>
+
+      <p class="error-body">
+        The page you're looking for has moved, been renamed, or never existed.
+        Let's get you back to building something meaningful.
+      </p>
+
+      <div class="error-cta-group">
+        <a href="index.html" class="cta-btn">← Back to Home</a>
+        <a href="brand-audit.html" class="cta-btn cta-btn--outline">Book a Free Audit</a>
+      </div>
+
+      <div class="error-divider">or explore</div>
+
+      <nav class="error-links" aria-label="Quick navigation">
+        <span class="error-links__label">Find what you need</span>
+        <a href="about.html"       class="error-link">About Us</a>
+        <a href="services.html"    class="error-link">Services</a>
+        <a href="work.html"        class="error-link">Our Work</a>
+        <a href="contact.html"     class="error-link">Contact</a>
+        <a href="brand-audit.html" class="error-link">Brand Audit</a>
+      </nav>
+
+    </div>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────────────────────── -->
+  <div id="footer-placeholder"></div>
+
+  <!-- ── Scripts ───────────────────────────────────────────────────────────── -->
+  <script src="js/component.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

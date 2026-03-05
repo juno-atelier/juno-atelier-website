@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="You're offline — Juno Atelier. Check your connection and try again." />
+  <title>Juno Atelier · You're Offline</title>
+
+  <!-- ── Favicons ─────────────────────────────────────────────────────────── -->
+  <link rel="icon"             type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="icon"             type="image/png"     href="assets/images/JA arts.svg" sizes="32x32" />
+  <link rel="apple-touch-icon"                      href="assets/images/JA Apple.svg" sizes="180x180" />
+
+  <!-- ── Google Fonts ─────────────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap"
+  />
+
+  <!-- ── Global styles (cached by service worker) ─────────────────────────── -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <style>
+    /* ── Full-page layout ───────────────────────────────────────────────────── */
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display:         flex;
+      flex-direction:  column;
+      min-height:      100vh;
+      background-color: var(--color-cream, #FDF6E9);
+    }
+
+    /* ── Main centred stage ─────────────────────────────────────────────────── */
+    .offline-main {
+      flex:            1;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      padding:         4rem 1.5rem;
+      position:        relative;
+      overflow:        hidden;
+    }
+
+    /* ── Background geometry ────────────────────────────────────────────────── */
+    .offline-bg {
+      position:       absolute;
+      inset:          0;
+      pointer-events: none;
+      overflow:       hidden;
+      z-index:        0;
+    }
+
+    .offline-bg__grid {
+      position:         absolute;
+      inset:            0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 48px,
+        rgba(30, 61, 66, 0.025) 48px,
+        rgba(30, 61, 66, 0.025) 49px
+      );
+    }
+
+    .offline-bg__circle {
+      position:      absolute;
+      border-radius: 50%;
+      opacity:       0.055;
+    }
+
+    .offline-bg__circle--1 {
+      width:      500px;
+      height:     500px;
+      background: var(--color-teal, #1E3D42);
+      top:        -160px;
+      left:       -120px;
+      animation:  bgDrift1 20s ease-in-out infinite alternate;
+    }
+
+    .offline-bg__circle--2 {
+      width:      380px;
+      height:     380px;
+      background: var(--color-mustard, #E1AD01);
+      bottom:     -100px;
+      right:      -80px;
+      animation:  bgDrift2 25s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgDrift1 { from { transform: translate(0,0); } to { transform: translate(20px, 18px); } }
+    @keyframes bgDrift2 { from { transform: translate(0,0); } to { transform: translate(-18px, -14px); } }
+
+    /* ── Content card ───────────────────────────────────────────────────────── */
+    .offline-content {
+      position:   relative;
+      z-index:    1;
+      text-align: center;
+      max-width:  580px;
+      animation:  fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ── Signal icon ────────────────────────────────────────────────────────── */
+    .offline-icon {
+      margin-bottom: 2rem;
+      display:       inline-block;
+    }
+
+    /* The SVG bars animate sequentially — top bar pulses last */
+    .offline-icon__bar {
+      animation: barPulse 2.2s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    .offline-icon__bar--1 { animation-delay: 0s;    }
+    .offline-icon__bar--2 { animation-delay: 0.22s; }
+    .offline-icon__bar--3 { animation-delay: 0.44s; }
+    .offline-icon__bar--4 { animation-delay: 0.66s; animation-play-state: paused; opacity: 0.18; }
+
+    /* Bar 4 (full signal) stays dim — indicating lost connection */
+    @keyframes barPulse {
+      0%, 100% { opacity: 0.25; transform: scaleY(0.85); }
+      50%       { opacity: 1;    transform: scaleY(1);    }
+    }
+
+    /* Strike-through line animates in on load */
+    .offline-icon__strike {
+      stroke-dasharray:   64;
+      stroke-dashoffset:  64;
+      animation:          strikeIn 0.5s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+
+    @keyframes strikeIn {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ── Eyebrow ─────────────────────────────────────────────────────────────── */
+    .offline-eyebrow {
+      display:        inline-flex;
+      align-items:    center;
+      gap:            0.5rem;
+      font-family:    var(--font-body, 'Inter', sans-serif);
+      font-size:      0.72rem;
+      font-weight:    600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color:          var(--color-terracotta, #E2725B);
+      margin-bottom:  1.25rem;
+    }
+
+    .offline-eyebrow::before,
+    .offline-eyebrow::after {
+      content:    '';
+      display:    block;
+      width:      28px;
+      height:     1px;
+      background: var(--color-terracotta, #E2725B);
+      opacity:    0.5;
+    }
+
+    /* ── Heading ────────────────────────────────────────────────────────────── */
+    .offline-heading {
+      font-family:   var(--font-display, 'Playfair Display', serif);
+      font-size:     clamp(1.7rem, 4.5vw, 2.4rem);
+      color:         var(--color-teal, #1E3D42);
+      margin-bottom: 1rem;
+      line-height:   1.2;
+    }
+
+    .offline-heading em {
+      font-style: italic;
+      color:      var(--color-terracotta, #E2725B);
+    }
+
+    /* ── Body ───────────────────────────────────────────────────────────────── */
+    .offline-body {
+      font-size:     1rem;
+      line-height:   1.75;
+      color:         var(--color-text-secondary, #4a5568);
+      margin-bottom: 2.25rem;
+      max-width:     46ch;
+      margin-inline: auto;
+    }
+
+    /* ── Retry button ───────────────────────────────────────────────────────── */
+    .offline-retry-btn {
+      display:         inline-flex;
+      align-items:     center;
+      justify-content: center;
+      gap:             0.5rem;
+      padding:         0.65rem 1.5rem;
+      background:      var(--color-terracotta, #E2725B);
+      color:           #fff;
+      font-family:     var(--font-body, 'Inter', sans-serif);
+      font-size:       0.875rem;
+      font-weight:     600;
+      border:          none;
+      border-radius:   var(--radius-sm, 0.25rem);
+      cursor:          pointer;
+      letter-spacing:  0.01em;
+      text-decoration: none;
+      transition:
+        background  0.2s ease,
+        transform   0.2s ease,
+        box-shadow  0.2s ease;
+      margin-bottom:   2.5rem;
+    }
+
+    .offline-retry-btn:hover {
+      background: var(--color-terracotta-hover, #c55f4a);
+      transform:  translateY(-2px);
+      box-shadow: 0 6px 18px rgba(226, 114, 91, 0.35);
+    }
+
+    .offline-retry-btn:active {
+      transform:  translateY(0);
+      box-shadow: none;
+    }
+
+    /* Spinner shown while retrying */
+    .offline-retry-btn .btn-spinner {
+      display:       none;
+      width:         14px;
+      height:        14px;
+      border:        2px solid rgba(255,255,255,0.4);
+      border-top:    2px solid #fff;
+      border-radius: 50%;
+      animation:     spin 0.7s linear infinite;
+    }
+
+    .offline-retry-btn.is-retrying .btn-spinner    { display: block; }
+    .offline-retry-btn.is-retrying .btn-label      { opacity: 0.7;   }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Status indicator ───────────────────────────────────────────────────── */
+    .offline-status {
+      display:      flex;
+      align-items:  center;
+      justify-content: center;
+      gap:          0.5rem;
+      font-size:    0.8rem;
+      color:        var(--color-text-muted, #5a6a6c);
+      margin-bottom: 2rem;
+    }
+
+    .offline-status__dot {
+      width:         8px;
+      height:        8px;
+      border-radius: 50%;
+      background:    #e53e3e;
+      box-shadow:    0 0 0 0 rgba(229, 62, 62, 0.4);
+      animation:     statusPulse 2s ease-in-out infinite;
+      flex-shrink:   0;
+    }
+
+    .offline-status__dot.is-online {
+      background: #38a169;
+      box-shadow: 0 0 0 0 rgba(56, 161, 105, 0.4);
+    }
+
+    @keyframes statusPulse {
+      0%  { box-shadow: 0 0 0 0   rgba(229, 62, 62, 0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(229, 62, 62, 0);    }
+      100%{ box-shadow: 0 0 0 0   rgba(229, 62, 62, 0);    }
+    }
+
+    /* ── Divider ─────────────────────────────────────────────────────────────── */
+    .offline-divider {
+      display:        flex;
+      align-items:    center;
+      justify-content: center;
+      gap:            1rem;
+      color:          var(--color-text-muted, #5a6a6c);
+      font-size:      0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom:  1.5rem;
+    }
+
+    .offline-divider::before,
+    .offline-divider::after {
+      content:    '';
+      flex:       1;
+      max-width:  70px;
+      height:     1px;
+      background: rgba(0,0,0,0.09);
+    }
+
+    /* ── Quick-links ─────────────────────────────────────────────────────────── */
+    .offline-links {
+      display:         flex;
+      flex-wrap:       wrap;
+      gap:             0.4rem 1.25rem;
+      justify-content: center;
+    }
+
+    .offline-links__label {
+      width:          100%;
+      font-size:      0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color:          var(--color-text-muted, #5a6a6c);
+      margin-bottom:  0.2rem;
+    }
+
+    .offline-link {
+      font-size:       0.875rem;
+      font-weight:     500;
+      color:           var(--color-teal, #1E3D42);
+      text-decoration: none;
+      border-bottom:   1.5px solid rgba(30,61,66,0.2);
+      padding-bottom:  1px;
+      transition:
+        color        0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .offline-link:hover {
+      color:        var(--color-terracotta, #E2725B);
+      border-color: var(--color-terracotta, #E2725B);
+    }
+
+    /* ── Minimal header (no JS component needed on error pages) ────────────── */
+    .offline-header {
+      padding:         1rem 1.5rem;
+      background:      var(--color-cream, #FDF6E9);
+      border-bottom:   1px solid rgba(0,0,0,0.06);
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+    }
+
+    .offline-header__badge {
+      font-size:      0.68rem;
+      font-weight:    600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color:          var(--color-text-muted, #5a6a6c);
+      background:     rgba(0,0,0,0.05);
+      padding:        0.2rem 0.6rem;
+      border-radius:  var(--radius-pill, 40px);
+    }
+
+    /* ── Slim footer ─────────────────────────────────────────────────────────── */
+    .offline-footer {
+      text-align:   center;
+      padding:      1.25rem 1.5rem;
+      font-size:    0.75rem;
+      color:        var(--color-text-muted, #5a6a6c);
+      border-top:   1px solid rgba(0,0,0,0.06);
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .offline-main {
+        padding: 2.5rem 1.25rem;
+      }
+    }
+
+    /* ── Reduced motion ─────────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .offline-content,
+      .offline-bg__circle--1,
+      .offline-bg__circle--2,
+      .offline-icon__bar,
+      .offline-status__dot,
+      .btn-spinner { animation: none; }
+
+      .offline-icon__strike { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Slim header (self-contained — no component.js needed) ────────────── -->
+  <header class="offline-header" role="banner">
+
+    <!--
+      Uses the same .logo--has-image markup pattern defined in styles.css.
+      The src path below matches whatever logo file is in your navbar component.
+      If your logo file has a different name, update the src here to match.
+    -->
+    <a href="index.html" class="logo--has-image" aria-label="Juno Atelier — Home">
+      <picture class="logo__picture">
+        <img
+          src="assets/images/Juno.svg"
+          alt="Juno Atelier Logo"
+          class="logo__img"
+          width="160"
+          height="48"
+          loading="eager"
+          decoding="async"
+          draggable="false"
+          onerror="this.closest('.logo--has-image').classList.add('logo--img-error')"
+        />
+      </picture>
+      <!-- Shown automatically if the image fails to load -->
+      <span class="logo__fallback" aria-hidden="true">
+        <span class="logo__fallback-primary">Juno <span class="logo__accent">Atelier</span></span>
+        <span class="logo__fallback-tag">Brand Studio</span>
+      </span>
+    </a>
+
+    <span class="offline-header__badge">Offline Mode</span>
+  </header>
+
+  <!-- ── Main content ─────────────────────────────────────────────────────── -->
+  <main class="offline-main" aria-labelledby="offline-heading">
+
+    <div class="offline-bg" aria-hidden="true">
+      <div class="offline-bg__grid"></div>
+      <div class="offline-bg__circle offline-bg__circle--1"></div>
+      <div class="offline-bg__circle offline-bg__circle--2"></div>
+    </div>
+
+    <div class="offline-content">
+
+      <!-- Animated signal-lost icon -->
+      <div class="offline-icon" aria-hidden="true">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Signal bars -->
+          <rect class="offline-icon__bar offline-icon__bar--1" x="8"  y="50" width="10" height="12" rx="2" fill="#1E3D42"/>
+          <rect class="offline-icon__bar offline-icon__bar--2" x="22" y="42" width="10" height="20" rx="2" fill="#1E3D42"/>
+          <rect class="offline-icon__bar offline-icon__bar--3" x="36" y="32" width="10" height="30" rx="2" fill="#1E3D42"/>
+          <rect class="offline-icon__bar offline-icon__bar--4" x="50" y="20" width="10" height="42" rx="2" fill="#1E3D42"/>
+          <!-- Strike-through line -->
+          <line class="offline-icon__strike" x1="6" y1="66" x2="66" y2="6" stroke="#E2725B" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="offline-eyebrow">No Connection</p>
+
+      <h1 id="offline-heading" class="offline-heading">
+        Looks like you're <em>offline.</em>
+      </h1>
+
+      <p class="offline-body">
+        We can't reach the server right now. Check your Wi-Fi or mobile data,
+        then try again we'll be here when you're back online.
+      </p>
+
+      <!-- Live connection status indicator -->
+      <div class="offline-status" id="connectionStatus" aria-live="polite" aria-atomic="true">
+        <span class="offline-status__dot" id="statusDot"></span>
+        <span id="statusText">No internet connection detected</span>
+      </div>
+
+      <!-- Retry button -->
+      <button
+        class="offline-retry-btn"
+        id="retryBtn"
+        onclick="handleRetry()"
+        aria-label="Try reconnecting"
+      >
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span class="btn-label">Try Again</span>
+      </button>
+
+      <div class="offline-divider">or navigate to</div>
+
+      <!-- Cached pages the SW has stored -->
+      <nav class="offline-links" aria-label="Cached pages">
+        <span class="offline-links__label">Pages available offline</span>
+        <a href="index.html"       class="offline-link">Home</a>
+        <a href="about.html"       class="offline-link">About</a>
+        <a href="services.html"    class="offline-link">Services</a>
+        <a href="work.html"        class="offline-link">Our Work</a>
+        <a href="contact.html"     class="offline-link">Contact</a>
+        <a href="brand-audit.html" class="offline-link">Brand Audit</a>
+      </nav>
+
+    </div>
+  </main>
+
+  <!-- ── Slim footer ───────────────────────────────────────────────────────── -->
+  <footer class="offline-footer" role="contentinfo">
+    <p>© <span id="offlineYear"></span> Juno Atelier · Nairobi, Kenya</p>
+  </footer>
+
+  <script>
+    // ── Set current year ───────────────────────────────────────────────────────
+    document.getElementById('offlineYear').textContent = new Date().getFullYear();
+
+    // ── Live connection watcher ────────────────────────────────────────────────
+    const dot        = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const retryBtn   = document.getElementById('retryBtn');
+
+    function updateStatus(online) {
+      if (online) {
+        dot.classList.add('is-online');
+        statusText.textContent = 'Connection restored — reloading…';
+        // Auto-reload after brief pause so user can read the message
+        setTimeout(() => window.location.reload(), 1200);
+      } else {
+        dot.classList.remove('is-online');
+        statusText.textContent = 'No internet connection detected';
+      }
+    }
+
+    window.addEventListener('online',  () => updateStatus(true));
+    window.addEventListener('offline', () => updateStatus(false));
+
+    // ── Retry button ───────────────────────────────────────────────────────────
+    function handleRetry() {
+      retryBtn.classList.add('is-retrying');
+      retryBtn.disabled = true;
+
+      // Attempt a lightweight HEAD request to check real connectivity
+      fetch('/', { method: 'HEAD', cache: 'no-store' })
+        .then(() => {
+          updateStatus(true);
+        })
+        .catch(() => {
+          // Still offline
+          retryBtn.classList.remove('is-retrying');
+          retryBtn.disabled = false;
+          statusText.textContent = 'Still offline. Check your connection.';
+        });
+    }
+
+    // Check immediately on load in case connection was already restored
+    if (navigator.onLine) updateStatus(true);
+  </script>
+
+</body>
+</html>

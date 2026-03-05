@@ -22,6 +22,10 @@
      for a separate stylesheet link in every page <head>.
    · footer-credit-strip.css can now be deleted from your project.
    · .fc-strip also added to the §22 print rule so it's hidden when printing.
+
+   FIX v5 — Hero Gap Fix
+   · §3 main rule added — removes any implicit top margin/padding on <main>
+     that caused a visible gap between the sticky navbar and the hero section.
 ═══════════════════════════════════════════════════════════════════════════ */
 
 
@@ -127,7 +131,7 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   3. ROOT / BODY
+   3. ROOT / BODY / MAIN
 ───────────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
@@ -142,6 +146,12 @@ body {
   -webkit-font-smoothing:  antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height:              100vh;
+}
+
+/* FIX v5: Remove any implicit spacing between the navbar and hero section */
+main {
+  margin-top:  0;
+  padding-top: 0;
 }
 
 
@@ -832,20 +842,14 @@ img, svg {
 ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Strip container ──────────────────────────────────────────────────────── */
-/*
-   Slim centred row below .footer-bottom.
-   Gold-tinted border-top aligns with the footer's existing gold divider
-   language (rgba(225,173,1,0.18) on .footer-grid) rather than the source's
-   plain rgba(255,255,255,0.06).
-*/
 .fc-strip {
   display:         flex;
   align-items:     center;
   justify-content: center;
-  flex-wrap:       wrap;          /* graceful reflow on narrow screens */
+  flex-wrap:       wrap;
   gap:             0.5rem;
   padding-top:     1rem;
-  padding-bottom:  1.25rem;       /* FIX v5: lifts strip clear of viewport edge */
+  padding-bottom:  1.25rem;
   margin-top:      1rem;
   border-top:      1px solid rgba(225, 173, 1, 0.12);
 }
@@ -864,10 +868,6 @@ img, svg {
 
 
 /* ── Heart glyph — five-layer red glow + heartbeat pulse ─────────────────── */
-/*
-   Five-layer glow: tight inner halo collapsing out to a wide bloom.
-   Layer order: innermost (sharpest) → outermost (widest spread).
-*/
 .fc-strip__heart {
   color:       #ff2020;
   font-size:   1rem;
@@ -892,18 +892,12 @@ img, svg {
   transition:      opacity var(--transition-mid, 0.25s ease);
 }
 
-/* Keyboard focus ring — uses footer gold accent for consistency */
 .fc-strip__link:focus-visible {
   outline: 2px solid var(--color-mustard, #E1AD01);
 }
 
 
-/* ── Logo image — candle / neon-tube flicker ──────────────────────────────
-   brightness(0) invert(1) in every keyframe bakes pure white into the logo.
-   The flicker modulates opacity + drop-shadow intensity at irregular %
-   stops to feel genuinely unsteady rather than a simple repeating pulse.
-   Hover: pauses the flicker and locks to a steady full-bright glow.
-────────────────────────────────────────────────────────────────────────── */
+/* ── Logo image — candle / neon-tube flicker ──────────────────────────────── */
 .fc-strip__logo {
   display:     block;
   height:      26px;
@@ -915,7 +909,6 @@ img, svg {
     opacity var(--transition-mid, 0.25s ease);
 }
 
-/* Hover: pause the flicker, snap to steady full-bright state */
 .fc-strip__link:hover .fc-strip__logo {
   animation-play-state: paused;
   opacity: 1;
@@ -928,8 +921,6 @@ img, svg {
 
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
-
-/* ≤ 768px — tighten gap when strip wraps to two lines */
 @media (max-width: 768px) {
   .fc-strip {
     gap: 0.35rem;
@@ -940,11 +931,10 @@ img, svg {
   }
 }
 
-/* ≤ 480px — reduce strip spacing to keep footer compact */
 @media (max-width: 480px) {
   .fc-strip {
     padding-top:    0.75rem;
-    padding-bottom: 1rem;         /* FIX v5: proportional bottom lift on mobile */
+    padding-bottom: 1rem;
     margin-top:     0.75rem;
   }
 
@@ -955,20 +945,9 @@ img, svg {
 
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
-/*
-   Users who prefer reduced motion still see the full credit strip — just
-   without the flicker and heartbeat animations. A static white filter
-   keeps the logo visible and legible.
-
-   NOTE: The global §4 reduced-motion block above already suppresses
-   animation-duration via the * selector. These rules are a belt-and-braces
-   defence for the fc- animations in case the * override is ever scoped or
-   removed downstream.
-*/
 @media (prefers-reduced-motion: reduce) {
   .fc-strip__logo {
     animation: none;
-    /* Keep the white + subtle static glow so the logo remains visible */
     filter:
       brightness(0) invert(1)
       drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));
@@ -981,17 +960,7 @@ img, svg {
 }
 
 
-/* ── Keyframe animations ──────────────────────────────────────────────────
-   Both keyframes carry the fc- prefix to guarantee zero collision with any
-   existing keyframe names on the page ("heartbeat", "flicker", etc.).
-────────────────────────────────────────────────────────────────────────── */
-
-/*
-   fc-juno-flicker
-   Irregular opacity + glow pulses at non-uniform % stops to feel genuinely
-   unsteady. brightness(0) invert(1) in every frame keeps the logo pure white.
-   19 keyframe stops replicate the source design exactly — no visual regression.
-*/
+/* ── Keyframe animations ──────────────────────────────────────────────────── */
 @keyframes fc-juno-flicker {
   0%   { opacity: 0.92; filter: brightness(0) invert(1) drop-shadow(0 0  7px rgba(255,255,255,0.70)) drop-shadow(0 0 16px rgba(255,255,255,0.30)); }
   4%   { opacity: 0.50; filter: brightness(0) invert(1) drop-shadow(0 0  2px rgba(255,255,255,0.20)) drop-shadow(0 0  4px rgba(255,255,255,0.10)); }
@@ -1015,11 +984,6 @@ img, svg {
   100% { opacity: 0.92; filter: brightness(0) invert(1) drop-shadow(0 0  7px rgba(255,255,255,0.70)) drop-shadow(0 0 16px rgba(255,255,255,0.30)); }
 }
 
-/*
-   fc-heartbeat
-   Natural double-beat pulse: primary swell → contract → secondary swell → hold.
-   Scale stays at 1.18× maximum to keep the heart subtle within the strip.
-*/
 @keyframes fc-heartbeat {
   0%,  40%, 100% { transform: scale(1);    opacity: 1;    }
   20%             { transform: scale(1.18); opacity: 0.85; }

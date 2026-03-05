@@ -26,8 +26,17 @@
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/hero-fullbleed.css" />
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/fab.css" />
+
+  <link
+  rel="preload"
+  as="image"
+  href="assets/images/sun drenched.svg"
+  fetchpriority="high"
+  type="image/svg+xml"
+/>
   
 </head>
 <body>
@@ -49,42 +58,58 @@
   <main>
 
     <!-- ── Hero ──────────────────────────────────────────────────────────── -->
-    <section id="home" class="hero-section" aria-labelledby="hero-heading">
-      <div class="hero-gradient" aria-hidden="true"></div>
-      <div class="container hero-inner">
+    <section
+  id="home"
+  class="hero-section"
+  aria-labelledby="hero-heading"
+  data-hero-bg
+>
 
-        <div class="hero-text">
-          <span class="hero-badge">Nairobi · Africa · Global</span>
-          <h1 id="hero-heading" class="hero-heading">
-            Brand Systems for the
-            <em class="hero-heading__accent">Modern Business.</em>
-          </h1>
-          <p class="hero-body">
-            We help modern businesses build brand systems that communicate clearly, scale effortlessly,
-            and evolve confidently through the strategic integration of human creativity and AI.
-          </p>
-          <div class="hero-ctas">
-            <a href="#services" class="cta-btn"              data-scroll-to="services">Explore Services</a>
-            <a href="#process"  class="cta-btn cta-btn--outline" data-scroll-to="process">Our Process</a>
-          </div>
-        </div>
+  <picture class="hero-section__bg-picture" aria-hidden="true">
+    <img
+      src="assets/images/sun drenched.svg"
+      alt=""
+      class="hero-section__bg-img"
+      width="1920"
+      height="1080"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
+  </picture>
 
-        <div class="hero-visual" aria-label="Hero image — Sun-drenched Studio Illustration">
-  <div class="hero-visual__bubble hero-visual__bubble--top"    aria-hidden="true"></div>
-  <div class="hero-visual__bubble hero-visual__bubble--bottom" aria-hidden="true"></div>
+  <div class="hero-section__overlay" aria-hidden="true"></div>
+  <div class="hero-gradient"         aria-hidden="true"></div>
 
-  <img
-    src="assets/images/sun drenched.svg"
-    alt="Sun-drenched studio illustration — warm, minimal brand workspace"
-    class="hero-visual__img"
-    width="1200"
-    height="675"
-    loading="eager"
-    decoding="async"
-  /></div>
+  <div class="container hero-inner">
+    <div class="hero-text">
 
+      <span class="hero-badge" role="text">Nairobi · Africa · Global</span>
+
+      <h1 id="hero-heading" class="hero-heading">
+        Brand Systems for the
+        <em class="hero-heading__accent">Modern<br aria-hidden="true"> Business.</em>
+      </h1>
+
+      <p class="hero-body">
+        We help modern businesses build brand systems that communicate clearly,
+        scale effortlessly, and evolve confidently through the strategic
+        integration of human creativity and AI.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#services" class="cta-btn"                               data-scroll-to="services">Explore Services</a>
+        <a href="#process"  class="cta-btn cta-btn--outline cta-btn--outline-light" data-scroll-to="process">Our Process</a>
       </div>
-    </section><!-- /#home -->
+
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator" aria-hidden="true">
+    <span class="hero-scroll-indicator__chevron"></span>
+  </div>
+
+</section><!-- /#home -->
 
 
     <!-- ── Values Strip ───────────────────────────────────────────────────── -->
@@ -290,7 +315,9 @@
  <div id="footer-placeholder"></div>
 
   <script src="js/component.js"></script>
+  <script src="js/hero-enhancements.js" defer></script>
   <script type="module" src="js/main.js"></script>
+
 
 </body>
 </html>
