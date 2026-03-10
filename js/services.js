@@ -32,6 +32,7 @@ export function initServices() {
 
 /**
  * Category filtering for service cards
+ * Updated to handle the new 'business-development' category
  */
 function initCategoryFilter() {
   const filterButtons = qsa('.category-filter-btn');
@@ -52,8 +53,18 @@ function initCategoryFilter() {
       const category = this.dataset.category;
 
       serviceCards.forEach(card => {
+        // Show cards matching the category or all cards if 'all' is selected
         card.style.display =
           category === 'all' || card.dataset.category === category ? 'flex' : 'none';
+      });
+
+      // Also handle any category-specific notes or special elements
+      const categoryNotes = qsa('.service-category-note');
+      categoryNotes.forEach(note => {
+        if (note.dataset.category) {
+          note.style.display = 
+            category === 'all' || note.dataset.category === category ? 'block' : 'none';
+        }
       });
 
       animateGridUpdate();
@@ -83,7 +94,7 @@ function animateGridUpdate() {
  */
 function initScrollAnimations() {
   const animatedElements = qsa(
-    '.service-detailed-card, .package-card, .process-step, .industry-item'
+    '.service-detailed-card, .package-card, .process-step, .industry-item, .retainer-tier-card'
   );
   if (!animatedElements.length) return;
 
@@ -118,6 +129,20 @@ function initPackageHoverEffects() {
     });
     card.addEventListener('mouseleave', function () {
       if (this.classList.contains('package-card--featured')) {
+        this.style.transform = 'scale(1.02) translateY(0)';
+      }
+    });
+  });
+
+  // Add hover effects for retainer cards
+  qsa('.retainer-tier-card').forEach(card => {
+    card.addEventListener('mouseenter', function () {
+      if (this.classList.contains('retainer-tier-card--featured')) {
+        this.style.transform = 'scale(1.02) translateY(-4px)';
+      }
+    });
+    card.addEventListener('mouseleave', function () {
+      if (this.classList.contains('retainer-tier-card--featured')) {
         this.style.transform = 'scale(1.02) translateY(0)';
       }
     });
