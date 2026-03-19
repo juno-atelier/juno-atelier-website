@@ -1,263 +1,167 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   hero-fullbleed.css — Full-Bleed Background Hero Override
-   Juno Atelier · Deliverable 2 of 3
+   hero-fullbleed.css — Full-Bleed Background Hero
+   Juno Atelier · Vanilla HTML / CSS
 
-   LOAD ORDER: This file MUST be linked AFTER css/sections.css in <head>.
-   It overrides hero-specific rules from sections.css using equal or higher
-   specificity. All other section styles (values, services, process, about,
-   footer) are completely untouched.
+   CHANGE LOG:
+   v2 — CSS-Only Refactor
+   · Background image moved to CSS background shorthand on .hero-section.
+   · Old picture/img/overlay elements hidden.
+   · Text reveal via pure CSS @keyframes.
+   · Parallax removed. hero-enhancements.js can be deleted.
+   · Dark background-color fallback prevents cream body bleed.
 
-   ARCHITECTURE
-   ────────────
-   Three stacking z-index layers:
-     0 · .hero-section__bg-picture  — full-bleed background image
-     1 · .hero-section__overlay     — gradient scrim (contrast + brand warmth)
-     2 · .hero-inner / .hero-text   — foreground text content
+   v3 — Viewport Fit
+   · --hero-min-height changed 90vh → 100vh / 100svh.
+   · Padding reduced so all content fits within one viewport height.
 
-   CONTRAST COMPLIANCE (WCAG 2.1 AA)
-   ──────────────────────────────────
-   Measured contrast ratios at the overlay's darkest region (left edge):
-     · Heading (cream #FDF6E9 on #0a1518 equiv): ~14.5:1  ✓ AAA
-     · Body text (rgba cream 85% on dark):        ~11.2:1  ✓ AAA
-     · Badge text (cream on semi-transparent):     ~8.7:1  ✓ AAA
-     · Terracotta accent (#E2725B on dark):         ~5.1:1  ✓ AA (large text)
+   v4 — Content Position + Typography
+   · align-items changed center → flex-start so content sits upper-left.
+   · .hero-heading__accent br hidden — "modern business" renders one line.
+   · max-width on .hero-text widened to give heading room.
 
-   BROWSER SUPPORT
-   ───────────────
-   · CSS custom properties: all modern browsers (Chrome 49+, FF 31+, Safari 9.1+)
-   · object-fit: cover: Chrome 31+, FF 36+, Safari 10+, Edge 16+
-   · backdrop-filter: Chrome 76+, FF 103+, Safari 9+ (prefixed: -webkit-)
-   · @supports: Chrome 28+, FF 22+, Safari 9+, Edge 12+
-   · CSS logical properties (inset): Chrome 87+, FF 87+, Safari 14.1+
-     Fallback: explicit top/right/bottom/left for non-supporting browsers
-   · prefers-reduced-motion: Chrome 74+, FF 63+, Safari 10.1+
-   · CSS scroll-driven animations: Progressive enhancement only (Chrome 115+)
-
-   PRINT
-   ─────
-   The hero background image and overlay are hidden when printing. The text
-   content reverts to standard on-white dark typography.
-
-   NAMING CONVENTION
-   ─────────────────
-   New elements use BEM block__element pattern consistent with existing code:
-     .hero-section__bg-picture   (new background image wrapper)
-     .hero-section__bg-img       (new background image element)
-     .hero-section__overlay      (new gradient overlay)
-     .hero-scroll-indicator      (new decorative scroll nudge)
-     .cta-btn--outline-light     (new CTA modifier for dark backgrounds)
+   v5 — Heading Font Size Increase
+   · .hero-heading font-size increased: clamp(2.4rem,5vw,4.2rem)
+     → clamp(3rem,6vw,5.5rem).
+   · Desktop breakpoint font-size increased: clamp(3rem,4.2vw,4.4rem)
+     → clamp(3.5rem,5.5vw,6rem).
+   · line-height tightened 1.1 → 1.05 so the larger heading doesn't
+     add excessive vertical space between the two lines.
+   · max-width on .hero-text increased across all breakpoints to ensure
+     "modern business" still renders on one line at the larger size.
 ═══════════════════════════════════════════════════════════════════════════ */
 
 
 /* ─────────────────────────────────────────────────────────────────────────
    1. CUSTOM PROPERTY EXTENSIONS
-   Additional tokens used only in the hero. Scoped to .hero-section so they
-   don't pollute :root and can be overridden per-breakpoint cleanly.
 ───────────────────────────────────────────────────────────────────────── */
 .hero-section {
-  /* Overlay colour — deep teal-black derived from --color-teal */
   --hero-overlay-dark:    rgba(10, 22, 26, 0.82);
   --hero-overlay-mid:     rgba(10, 22, 26, 0.58);
   --hero-overlay-edge:    rgba(10, 22, 26, 0.14);
-
-  /* Warm amber accent in overlay — derived from --color-mustard */
   --hero-overlay-warm:    rgba(225, 173, 1, 0.09);
 
-  /* Text colours on dark background */
-  --hero-text-primary:    #FDF6E9;                   /* --color-cream */
+  --hero-text-primary:    #FDF6E9;
   --hero-text-secondary:  rgba(253, 246, 233, 0.82);
   --hero-text-muted:      rgba(253, 246, 233, 0.58);
 
-  /* Badge surface */
   --hero-badge-bg:        rgba(253, 246, 233, 0.12);
   --hero-badge-border:    rgba(253, 246, 233, 0.28);
 
-  /* Scroll indicator */
   --hero-chevron-color:   rgba(253, 246, 233, 0.45);
 
-  /* Minimum hero height */
-  --hero-min-height:      90vh;
-
-  /* Parallax travel distance — used by JS too (matched via data attribute) */
-  --hero-parallax-range:  60px;
+  --hero-min-height:      100vh;
 }
 
-/* svh unit (small viewport height) respects mobile browser chrome correctly.
-   Supported Chrome 108+, Firefox 101+, Safari 15.4+. Falls back to vh above. */
 @supports (min-height: 100svh) {
   .hero-section {
-    --hero-min-height: 90svh;
+    --hero-min-height: 100svh;
   }
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
    2. HERO SECTION SHELL
-   Overrides .hero-section from sections.css
 ───────────────────────────────────────────────────────────────────────── */
 .hero-section {
-  position:   relative;
-  min-height: var(--hero-min-height);
-  display:    flex;
-  align-items: center;
-  overflow:   hidden;
-  padding:    8rem 0 5rem;   /* generous top pad clears sticky navbar */
+  position:         relative;
+  min-height:       var(--hero-min-height);
+  display:          flex;
+  align-items:      flex-start;
+  overflow:         hidden;
+  padding:          7rem 0 3rem;
+  background-color: #0a161a;
+  background:
+    linear-gradient(
+      108deg,
+      rgba(10, 22, 26, 0.82)  0%,
+      rgba(10, 22, 26, 0.58) 42%,
+      rgba(10, 22, 26, 0.14) 75%,
+      transparent            100%
+    ),
+    radial-gradient(
+      ellipse 55% 65% at 72% 46%,
+      rgba(225, 173, 1, 0.09) 0%,
+      transparent              72%
+    ),
+    linear-gradient(
+      to top,
+      rgba(10, 22, 26, 0.35) 0%,
+      transparent             30%
+    ),
+    url('../assets/images/sun svg.svg') center / cover no-repeat;
 }
 
-/* Suppress the old radial gradient element — overlay handles all gradients */
 .hero-gradient {
   display: none;
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   3. BACKGROUND IMAGE — LAYER 0
+   3. HIDE OLD PICTURE / IMG / OVERLAY ELEMENTS
 ───────────────────────────────────────────────────────────────────────── */
-
-/* <picture> wrapper — stretched to fill the section absolutely */
-.hero-section__bg-picture {
-  position: absolute;
-  top:    0;
-  right:  0;
-  bottom: 0;
-  left:   0;
-  z-index: 0;
-  display: block;
-  line-height: 0;           /* collapse inline whitespace */
-}
-
-/* The <img> itself — positioned within the picture wrapper */
-.hero-section__bg-img {
-  position: absolute;
-  top:    0;
-  left:   0;
-  width:  100%;
-  height: 100%;
-  object-fit:      cover;
-  object-position: center center;
-  display: block;
-
-  /*
-    will-change hints the browser to promote this layer to GPU compositing.
-    Used only when the JS parallax is active — the JS adds / removes
-    'is-parallax-active' on .hero-section to keep GPU layers lean.
-  */
-}
-
-.hero-section.is-parallax-active .hero-section__bg-img {
-  will-change: transform;
-}
-
-
-/* ─────────────────────────────────────────────────────────────────────────
-   4. GRADIENT OVERLAY — LAYER 1
-   Two-layer gradient to ensure WCAG 2.1 AA text contrast while preserving
-   the warmth and depth of the illustration.
-
-   Layer A: Strong left-biased teal-dark sweep
-     Creates a deep shadow on the left (where text lives) that fades to a
-     semi-transparent veil on the right (where the image breathes).
-     Angle 108° matches the natural light direction in the illustration.
-
-   Layer B: Warm amber radial at image centre
-     Lets the golden warmth of the studio illustration bleed through the
-     right half of the frame, keeping the brand's warmth visible without
-     compromising text contrast on the left.
-
-   Layer C: Subtle bottom vignette
-     Anchors the scroll indicator and creates visual weight at the footer
-     of the hero, guiding the eye downward.
-───────────────────────────────────────────────────────────────────────── */
+.hero-section__bg-picture,
+.hero-section__bg-img,
 .hero-section__overlay {
-  position: absolute;
-  top:    0;
-  right:  0;
-  bottom: 0;
-  left:   0;
-  z-index: 1;
-  pointer-events: none;
-
-  background:
-    /* Layer A — directional teal-dark gradient */
-    linear-gradient(
-      108deg,
-      var(--hero-overlay-dark)  0%,
-      var(--hero-overlay-mid)  42%,
-      var(--hero-overlay-edge) 75%,
-      transparent              100%
-    ),
-    /* Layer B — warm amber radial bloom */
-    radial-gradient(
-      ellipse 55% 65% at 72% 46%,
-      var(--hero-overlay-warm) 0%,
-      transparent              72%
-    ),
-    /* Layer C — subtle bottom vignette */
-    linear-gradient(
-      to top,
-      rgba(10, 22, 26, 0.35) 0%,
-      transparent             30%
-    );
+  display: none;
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   5. HERO INNER LAYOUT — LAYER 2
-   Overrides .hero-inner from sections.css (was two-column flex).
+   4. HERO INNER LAYOUT
 ───────────────────────────────────────────────────────────────────────── */
 .hero-inner {
-  position:    relative;
-  z-index:     2;
-  display:     flex;
-  align-items: center;
-  flex-wrap:   nowrap;   /* single column — old two-column is removed */
-  gap:         0;
-
-  /*
-    Prevent text from running edge-to-edge on ultra-wide screens.
-    The .container utility already max-widths to --container-max (1280px),
-    so this is an additional inset for the text block itself.
-  */
-  padding-block: 2rem;
+  position:             relative;
+  z-index:              2;
+  display:              flex;
+  align-items:          flex-start;
+  flex-wrap:            nowrap;
+  gap:                  0;
+  padding-block:        1rem;
+  padding-inline-start: 0;
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   6. HERO TEXT BLOCK
-   Overrides .hero-text from sections.css
+   5. HERO TEXT BLOCK
+   v5: max-width increased to 780px to accommodate the larger heading
+   and keep "modern business" on one line.
 ───────────────────────────────────────────────────────────────────────── */
 .hero-text {
   flex:      none;
   width:     100%;
-  max-width: 600px;          /* comfortable reading column */
 
-  /*
-    Reveal animation — elements animate in on page load.
-    hero-enhancements.js adds .is-visible to trigger the keyframe.
-    Falls back gracefully if JS is absent (items stay visible).
-  */
-  opacity:   0;
-  transform: translateY(22px);
-  transition:
-    opacity   0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  /* v5: was 680px */
+  max-width: 780px;
+
+  animation: hero-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 .hero-text.is-visible {
-  opacity:   1;
-  transform: translateY(0);
-}
-
-/* No-JS fallback — if JS never fires, the text should still be readable */
-.no-js .hero-text {
+  animation: none;
   opacity:   1;
   transform: none;
 }
 
+.no-js .hero-text {
+  opacity:   1;
+  transform: none;
+  animation: none;
+}
+
+@keyframes hero-reveal {
+  from {
+    opacity:   0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
 
 /* ─────────────────────────────────────────────────────────────────────────
-   7. HERO BADGE
-   Overrides .hero-badge from sections.css — adapted for dark background
+   6. HERO BADGE
 ───────────────────────────────────────────────────────────────────────── */
 .hero-badge {
   display:        inline-block;
@@ -271,48 +175,49 @@
   padding:        0.3rem 0.9rem;
   border-radius:  var(--radius-pill);
   border:         1px solid var(--hero-badge-border);
-
-  /* Frosted glass micro-depth behind the badge */
   -webkit-backdrop-filter: blur(6px) saturate(1.4);
           backdrop-filter: blur(6px) saturate(1.4);
 }
 
-/* Stagger delay — badge enters slightly before the heading */
-.hero-badge {
-  transition-delay: 0s;
-}
-
 
 /* ─────────────────────────────────────────────────────────────────────────
-   8. HERO HEADING
-   Overrides .hero-heading from sections.css
+   7. HERO HEADING
+   v5: font-size increased from clamp(2.4rem, 5vw, 4.2rem)
+       to clamp(3rem, 6vw, 5.5rem).
+   v5: line-height tightened from 1.1 → 1.05 so the two heading lines
+       don't carry excessive vertical gap at the larger size.
 ───────────────────────────────────────────────────────────────────────── */
 .hero-heading {
-  font-family:  var(--font-display);
-  font-size:    clamp(2.4rem, 5vw, 4.2rem);
-  color:        var(--hero-text-primary);
-  line-height:  1.1;
-  margin-bottom: 1.5rem;
+  font-family:   var(--font-display);
 
-  /*
-    Subtle text shadow pushes the heading off the image without a harsh
-    halo. Shadow matches the overlay colour for visual coherence.
-  */
+  /* v5: enlarged — was clamp(2.4rem, 5vw, 4.2rem) */
+  font-size:     clamp(3rem, 6vw, 5.5rem);
+
+  color:         var(--hero-text-primary);
+
+  /* v5: tightened — was 1.1 */
+  line-height:   1.05;
+
+  margin-bottom: 1.5rem;
   text-shadow:
     0  2px 20px rgba(10, 22, 26, 0.45),
     0  4px 60px rgba(10, 22, 26, 0.20);
 }
 
 .hero-heading__accent {
-  color:      var(--color-terracotta);
-  font-style: italic;
-  /* Inherits text-shadow from parent — no additional shadow needed */
+  color:       var(--color-terracotta);
+  font-style:  italic;
+  white-space: nowrap;
+}
+
+/* Hides the <br> between "modern" and "business" in the HTML */
+.hero-heading__accent br {
+  display: none;
 }
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   9. HERO BODY TEXT
-   Overrides .hero-body from sections.css
+   8. HERO BODY TEXT
 ───────────────────────────────────────────────────────────────────────── */
 .hero-body {
   font-size:     1.1rem;
@@ -324,9 +229,7 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   10. HERO CTAs
-   .hero-ctas and .cta-btn inherited from styles.css — no overrides needed.
-   New modifier: .cta-btn--outline-light for the ghost button on dark BGs.
+   9. HERO CTAs
 ───────────────────────────────────────────────────────────────────────── */
 .hero-ctas {
   display:   flex;
@@ -339,20 +242,10 @@
   padding:   0.65rem 1.5rem;
 }
 
-/*
-  .cta-btn--outline-light
-  ────────────────────────
-  Ghost button variant for use on dark or image backgrounds.
-  Complements the filled .cta-btn (terracotta) without duplicating it.
-
-  Contrast check vs dark overlay:
-    cream #FDF6E9 on rgba(10,22,26,0.82) ≈ 13.8:1  ✓ AAA
-*/
 .cta-btn--outline-light {
   background:    rgba(253, 246, 233, 0.10);
   color:         var(--hero-text-primary);
   border-color:  rgba(253, 246, 233, 0.50);
-
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
 }
@@ -370,10 +263,7 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   11. HIDE OLD VISUAL COLUMN
-   .hero-visual and its children are no longer used in the new layout.
-   Hidden rather than removed in case a developer switches back to the
-   two-column layout by removing this stylesheet.
+   10. HIDE OLD VISUAL COLUMN
 ───────────────────────────────────────────────────────────────────────── */
 .hero-visual {
   display: none;
@@ -381,9 +271,7 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────
-   12. SCROLL INDICATOR
-   Animated chevron nudge — subtle cue to scroll past the hero.
-   Hidden via @media prefers-reduced-motion and on smartwatch breakpoint.
+   11. SCROLL INDICATOR
 ───────────────────────────────────────────────────────────────────────── */
 .hero-scroll-indicator {
   position:        absolute;
@@ -395,118 +283,70 @@
   flex-direction:  column;
   align-items:     center;
   pointer-events:  none;
-
-  animation: hero-scroll-bounce 2s ease-in-out infinite;
-  animation-delay: 2.5s;    /* wait for text reveal to complete */
-  opacity:         0;       /* starts hidden; JS/animation fills in */
+  animation:       hero-scroll-bounce 2s ease-in-out infinite;
+  animation-delay: 1.2s;
+  opacity:         0;
 }
 
 .hero-scroll-indicator__chevron {
-  display:      block;
-  width:        24px;
-  height:       24px;
-  border-right: 2px solid var(--hero-chevron-color);
+  display:       block;
+  width:         24px;
+  height:        24px;
+  border-right:  2px solid var(--hero-chevron-color);
   border-bottom: 2px solid var(--hero-chevron-color);
-  transform:    rotate(45deg);
+  transform:     rotate(45deg);
 }
 
 @keyframes hero-scroll-bounce {
-  0%, 100% { opacity: 0;    transform: translateX(-50%) translateY(0);    }
-  20%, 80% { opacity: 1;    transform: translateX(-50%) translateY(0);    }
-  50%      { opacity: 0.7;  transform: translateX(-50%) translateY(6px);  }
+  0%, 100% { opacity: 0;   transform: translateX(-50%) translateY(0);   }
+  20%, 80% { opacity: 1;   transform: translateX(-50%) translateY(0);   }
+  50%      { opacity: 0.7; transform: translateX(-50%) translateY(6px); }
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   13. RESPONSIVE BREAKPOINTS — HERO ONLY
-   Mobile-first: base styles above target smartwatch (≤199px).
-   Breakpoints override upward (tablet → desktop → large desktop).
+   12. RESPONSIVE BREAKPOINTS
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Smartwatch (≤ 199px) ────────────────────────────────────────────────
-   Absolute minimum — hero is a simple tall block with readable text.
-   No scroll indicator (too cramped). Badges hidden (width pressure).
-   Text is centred for narrow viewports.
-──────────────────────────────────────────────────────────────────────── */
+/* ── Smartwatch (≤ 199px) ─────────────────────────────────────────────────── */
 @media (max-width: 199px) {
   .hero-section {
-    min-height:  100svh;
-    min-height:  100vh;    /* svh fallback */
-    padding:     4.5rem 0 3rem;
+    min-height:  100vh;
+    padding:     4rem 0 2rem;
     align-items: flex-start;
-  }
-
-  .hero-section__overlay {
     background:
       linear-gradient(
         180deg,
         rgba(10, 22, 26, 0.80)  0%,
         rgba(10, 22, 26, 0.65) 100%
-      );
+      ),
+      url('../assets/images/sun svg.svg') center / cover no-repeat;
+    background-color: #0a161a;
   }
 
-  .hero-text {
-    max-width:  100%;
-    text-align: center;
-  }
+  .hero-text    { max-width: 100%; text-align: center; }
+  .hero-badge   { font-size: 0.6rem; padding: 0.25rem 0.6rem; margin-bottom: 0.75rem; }
+  .hero-heading { font-size: clamp(1.4rem, 8vw, 1.8rem); margin-bottom: 0.75rem; line-height: 1.15; }
+  .hero-heading__accent { white-space: normal; }
+  .hero-body    { font-size: 0.78rem; line-height: 1.55; max-width: 100%; margin-bottom: 1.25rem; }
 
-  .hero-badge {
-    font-size:     0.6rem;
-    padding:       0.25rem 0.6rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .hero-heading {
-    font-size:     clamp(1.4rem, 8vw, 1.8rem);
-    margin-bottom: 0.75rem;
-  }
-
-  .hero-body {
-    font-size:     0.78rem;
-    line-height:   1.55;
-    max-width:     100%;
-    margin-bottom: 1.25rem;
-  }
-
-  .hero-ctas {
-    flex-direction: column;
-    align-items:    stretch;
-  }
-
-  .hero-ctas .cta-btn {
-    font-size: 0.72rem;
-    padding:   0.5rem 1rem;
-    text-align: center;
-  }
-
-  .hero-scroll-indicator {
-    display: none;
-  }
+  .hero-ctas             { flex-direction: column; align-items: stretch; }
+  .hero-ctas .cta-btn    { font-size: 0.72rem; padding: 0.5rem 1rem; text-align: center; }
+  .hero-scroll-indicator { display: none; }
 }
 
 
-/* ── Mobile (≤ 767px) ────────────────────────────────────────────────────
-   Single-column, centred text. Overlay strengthened slightly so the
-   portrait-mode background image doesn't overpower compact text.
-──────────────────────────────────────────────────────────────────────── */
+/* ── Mobile (≤ 767px) ────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
   .hero-section {
-    min-height: 85vh;
-    min-height: 85svh;
-    padding:    6rem 0 4rem;
-    align-items: center;
-  }
-
-  /*
-    On narrow screens the gradient shifts to a full-coverage veil rather
-    than a directional left-to-right sweep — there's no meaningful
-    "left side" on a single column layout.
-  */
-  .hero-section__overlay {
+    min-height:  100vh;
+    min-height:  100svh;
+    padding:     6rem 0 2rem;
+    align-items: flex-start;
     background:
       linear-gradient(
         180deg,
-        rgba(10, 22, 26, 0.72) 0%,
+        rgba(10, 22, 26, 0.72)  0%,
         rgba(10, 22, 26, 0.55) 55%,
         rgba(10, 22, 26, 0.72) 100%
       ),
@@ -514,57 +354,37 @@
         ellipse 80% 60% at 50% 40%,
         rgba(225, 173, 1, 0.07) 0%,
         transparent 70%
-      );
+      ),
+      url('../assets/images/sun svg.svg') center / cover no-repeat;
+    background-color: #0a161a;
   }
 
-  .hero-inner {
-    justify-content: center;
-    text-align:      center;
-  }
+  .hero-inner  { text-align: left; }
+  .hero-text   { max-width: 100%; }
+  .hero-body   { max-width: 100%; }
 
-  .hero-text {
-    max-width: 520px;
-  }
+  /* Allow wrap on mobile — screen too narrow for one line at large size */
+  .hero-heading          { line-height: 1.1; }
+  .hero-heading__accent  { white-space: normal; }
 
-  .hero-body {
-    max-width: 100%;
-  }
-
-  .hero-ctas {
-    flex-direction: column;
-    align-items:    stretch;
-  }
-
-  .hero-ctas .cta-btn {
-    text-align: center;
-  }
-
-  .hero-scroll-indicator {
-    bottom: 1.5rem;
-  }
+  .hero-ctas             { flex-direction: column; align-items: flex-start; }
+  .hero-scroll-indicator { bottom: 1.5rem; }
 }
 
 
-/* ── Tablet (768px – 1023px) ────────────────────────────────────────────
-   Left-aligned layout returns; text block gets breathing room on the left.
-   Gradient reverts to directional sweep (there's horizontal space now).
-──────────────────────────────────────────────────────────────────────── */
+/* ── Tablet (768px – 1023px) ─────────────────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
   .hero-section {
-    min-height: 88vh;
-    min-height: 88svh;
-    padding:    7.5rem 0 5rem;
-  }
-
-  /* Restore directional overlay */
-  .hero-section__overlay {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding:    7rem 0 3rem;
     background:
       linear-gradient(
         108deg,
         rgba(10, 22, 26, 0.80)  0%,
         rgba(10, 22, 26, 0.55) 50%,
         rgba(10, 22, 26, 0.15) 85%,
-        transparent             100%
+        transparent            100%
       ),
       radial-gradient(
         ellipse 55% 65% at 70% 46%,
@@ -575,58 +395,61 @@
         to top,
         rgba(10, 22, 26, 0.30) 0%,
         transparent             28%
-      );
+      ),
+      url('../assets/images/sun svg.svg') center / cover no-repeat;
+    background-color: #0a161a;
   }
 
-  .hero-text {
-    max-width: 520px;
-  }
+  .hero-text { max-width: 640px; }
 }
 
 
-/* ── Desktop (≥ 1024px) ─────────────────────────────────────────────────
-   Full layout — left column text, right column image visible.
-   Background position shifts slightly right to showcase the illustration.
-──────────────────────────────────────────────────────────────────────── */
+/* ── Desktop (≥ 1024px) ──────────────────────────────────────────────────── */
 @media (min-width: 1024px) {
   .hero-section {
-    min-height: 92vh;
-    min-height: 92svh;
-    padding:    9rem 0 6rem;
-  }
-
-  /* Shift bg image to better frame the illustration on wide screens */
-  .hero-section__bg-img {
-    object-position: 65% center;
-  }
-
-  .hero-text {
-    max-width: 580px;
-  }
-
-  .hero-heading {
-    font-size: clamp(3rem, 4.2vw, 4.4rem);
-  }
-}
-
-
-/* ── Large Desktop (≥ 1280px) ───────────────────────────────────────────
-   Give the text column more room; overlay fades further right to reveal
-   more of the illustration.
-──────────────────────────────────────────────────────────────────────── */
-@media (min-width: 1280px) {
-  .hero-text {
-    max-width: 620px;
-  }
-
-  .hero-section__overlay {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding:    7rem 0 3rem;
     background:
       linear-gradient(
         108deg,
         rgba(10, 22, 26, 0.82)  0%,
         rgba(10, 22, 26, 0.55) 40%,
         rgba(10, 22, 26, 0.12) 72%,
-        transparent             100%
+        transparent            100%
+      ),
+      radial-gradient(
+        ellipse 55% 65% at 72% 46%,
+        rgba(225, 173, 1, 0.09) 0%,
+        transparent              72%
+      ),
+      linear-gradient(
+        to top,
+        rgba(10, 22, 26, 0.35) 0%,
+        transparent             30%
+      ),
+      url('../assets/images/sun svg.svg') 65% center / cover no-repeat;
+    background-color: #0a161a;
+  }
+
+  /* v5: was 680px */
+  .hero-text    { max-width: 780px; }
+
+  /* v5: was clamp(3rem, 4.2vw, 4.4rem) */
+  .hero-heading { font-size: clamp(3.5rem, 5.5vw, 6rem); }
+}
+
+
+/* ── Large Desktop (≥ 1280px) ────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .hero-section {
+    background:
+      linear-gradient(
+        108deg,
+        rgba(10, 22, 26, 0.82)  0%,
+        rgba(10, 22, 26, 0.55) 40%,
+        rgba(10, 22, 26, 0.12) 72%,
+        transparent            100%
       ),
       radial-gradient(
         ellipse 50% 60% at 74% 44%,
@@ -637,84 +460,57 @@
         to top,
         rgba(10, 22, 26, 0.28) 0%,
         transparent             25%
-      );
+      ),
+      url('../assets/images/sun svg.svg') 65% center / cover no-repeat;
+    background-color: #0a161a;
   }
+
+  /* v5: was 720px */
+  .hero-text { max-width: 820px; }
 }
 
 
-/* ── Ultra-wide (≥ 1600px) ──────────────────────────────────────────────
-   Cap the text content and prevent the hero from becoming cavernous.
-──────────────────────────────────────────────────────────────────────── */
+/* ── Ultra-wide (≥ 1600px) ───────────────────────────────────────────────── */
 @media (min-width: 1600px) {
-  .hero-section {
-    padding: 10rem 0 7rem;
-  }
+  .hero-section { padding: 8rem 0 4rem; }
 
-  .hero-text {
-    max-width: 660px;
-  }
+  /* v5: was 760px */
+  .hero-text { max-width: 860px; }
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   14. REDUCED-MOTION SUPPORT
-   Overrides all animations within the hero section for users who have
-   prefers-reduced-motion: reduce set in their OS/browser.
+   13. REDUCED-MOTION
 ═══════════════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  /* Reveal animation — skip directly to final state */
   .hero-text {
+    animation: none;
     opacity:   1;
     transform: none;
-    transition: none;
   }
 
-  /* Scroll indicator — hide entirely (its value is the motion itself) */
   .hero-scroll-indicator {
     display: none;
   }
-
-  /* Background parallax — static position, no transform */
-  .hero-section.is-parallax-active .hero-section__bg-img {
-    will-change: auto;
-    transform:   none !important;
-  }
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   15. PRINT STYLES
-   Override the standard print block in styles.css to handle hero-specific
-   concerns. Background and overlay are suppressed; text reverts to dark ink.
+   14. PRINT
 ═══════════════════════════════════════════════════════════════════════════ */
 @media print {
   .hero-section {
+    background:       none !important;
+    background-color: var(--color-cream) !important;
     min-height:       auto;
     padding:          2rem 0;
-    background-color: var(--color-cream);
   }
 
-  .hero-section__bg-picture,
-  .hero-section__bg-img,
-  .hero-section__overlay,
-  .hero-scroll-indicator {
-    display: none;
-  }
-
-  .hero-text {
-    opacity:   1;
-    transform: none;
-    max-width: 100%;
-  }
-
-  .hero-heading {
-    color:       var(--color-teal);
-    text-shadow: none;
-  }
-
-  .hero-body {
-    color: var(--color-text-secondary);
-  }
+  .hero-text              { opacity: 1; transform: none; animation: none; }
+  .hero-heading           { color: var(--color-teal); text-shadow: none; font-size: 2.5rem; line-height: 1.2; }
+  .hero-heading__accent   { white-space: normal; color: var(--color-terracotta); }
+  .hero-heading__accent br { display: none; }
+  .hero-body              { color: var(--color-text-secondary); }
 
   .hero-badge {
     color:      var(--color-terracotta);
@@ -727,4 +523,6 @@
     border-color: var(--color-terracotta);
     background:   transparent;
   }
+
+  .hero-scroll-indicator { display: none; }
 }

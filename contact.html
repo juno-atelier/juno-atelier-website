@@ -6,22 +6,26 @@
   <meta name="description" content="Contact Juno Atelier — AI-augmented brand studio based in Nairobi. Book a free brand audit or send us a message." />
   <title>Juno Atelier · Contact · AI-Augmented Brand Studio · Nairobi</title>
 
-  <!-- ── Favicons ─────────────────────────────────────────────────────────── -->
   <link rel="icon"             type="image/svg+xml" href="assets/images/favicon.svg" />
   <link rel="icon"             type="image/png"     href="assets/images/JA arts.svg" sizes="32x32" />
   <link rel="apple-touch-icon"                      href="assets/images/JA Apple.svg" sizes="180x180" />
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" />
 
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/contact.css" />
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/fab.css" />
+
+  <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    defer
+  ></script>
+
 </head>
 <body>
 
@@ -67,56 +71,219 @@
       <div class="container">
         <div class="contact-form-grid">
 
-          <!-- Left: Form -->
-          <div class="contact-form-container">
-            <span class="section-eyebrow section-eyebrow--left">Send a Message</span>
-            <h2 id="contact-form-heading" class="section-heading">Start the Conversation</h2>
+          <!-- Left col: Form + FAQ -->
+          <div class="contact-left-col">
 
-            <form id="contact-form" class="contact-form" novalidate aria-label="Contact form">
-              <div class="form-row form-row--two">
-                <div class="form-group">
-                  <label for="name" class="form-label">Full Name <span class="form-required" aria-hidden="true">*</span></label>
-                  <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required autocomplete="name" aria-required="true" />
-                  <span class="form-error" role="alert" aria-live="polite"></span>
+            <!-- Form -->
+            <div class="contact-form-container">
+              <span class="section-eyebrow section-eyebrow--left">Send a Message</span>
+              <h2 id="contact-form-heading" class="section-heading">Start the Conversation</h2>
+
+              <form
+                id="contact-form"
+                class="contact-form"
+                novalidate
+                aria-label="Contact form"
+                autocomplete="on"
+              >
+
+                <div class="form-row form-row--two">
+                  <div class="form-group">
+                    <label for="name" class="form-label">
+                      Full Name <span class="form-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      type="text" id="name" name="from_name" class="form-input"
+                      placeholder="Your name" required autocomplete="name"
+                      aria-required="true" aria-describedby="name-error"
+                    />
+                    <span id="name-error" class="form-error" role="alert" aria-live="polite"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="form-label">
+                      Email Address <span class="form-required" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      type="email" id="email" name="reply_to" class="form-input"
+                      placeholder="you@example.com" required autocomplete="email"
+                      aria-required="true" aria-describedby="email-error"
+                    />
+                    <span id="email-error" class="form-error" role="alert" aria-live="polite"></span>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="email" class="form-label">Email Address <span class="form-required" aria-hidden="true">*</span></label>
-                  <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
-                  <span class="form-error" role="alert" aria-live="polite"></span>
+
+                <div class="form-row form-row--two">
+                  <div class="form-group">
+                    <label for="company" class="form-label">Company / Brand</label>
+                    <input
+                      type="text" id="company" name="company" class="form-input"
+                      placeholder="Your company name" autocomplete="organization"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="service" class="form-label">Service Interested In</label>
+                    <select id="service" name="service" class="form-select">
+                      <option value="" disabled selected>Select a service…</option>
+                      <option value="Brand Strategy">Brand Strategy</option>
+                      <option value="Visual Identity">Visual Identity</option>
+                      <option value="Brand Audit">Brand Audit</option>
+                      <option value="AI Brand Accelerator">AI Brand Accelerator</option>
+                      <option value="Content Strategy">Content Strategy</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-row form-row--two">
                 <div class="form-group">
-                  <label for="company" class="form-label">Company / Brand</label>
-                  <input type="text" id="company" name="company" class="form-input" placeholder="Your company name" autocomplete="organization" />
+                  <label for="message" class="form-label">
+                    Message <span class="form-required" aria-hidden="true">*</span>
+                  </label>
+                  <textarea
+                    id="message" name="message" class="form-textarea" rows="5"
+                    placeholder="Tell us about your brand, goals, or questions…"
+                    required aria-required="true" aria-describedby="message-error"
+                  ></textarea>
+                  <span id="message-error" class="form-error" role="alert" aria-live="polite"></span>
                 </div>
-                <div class="form-group">
-                  <label for="service" class="form-label">Service Interested In</label>
-                  <select id="service" name="service" class="form-select">
-                    <option value="" disabled selected>Select a service…</option>
-                    <option value="brand-strategy">Brand Strategy</option>
-                    <option value="visual-identity">Visual Identity</option>
-                    <option value="brand-audit">Brand Audit</option>
-                    <option value="ai-brand-accelerator">AI Brand Accelerator</option>
-                    <option value="content-strategy">Content Strategy</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
 
-              <div class="form-group">
-                <label for="message" class="form-label">Message <span class="form-required" aria-hidden="true">*</span></label>
-                <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="Tell us about your brand, goals, or questions…" required aria-required="true"></textarea>
-                <span class="form-error" role="alert" aria-live="polite"></span>
-              </div>
+                <button
+                  type="submit" id="contact-submit"
+                  class="cta-btn cta-btn--full contact-submit-btn"
+                  data-default-text="Send Message"
+                  data-loading-text="⏳ Sending…"
+                  aria-live="polite"
+                >
+                  Send Message
+                </button>
 
-              <button type="submit" class="cta-btn cta-btn--full contact-submit-btn">Send Message</button>
-              <p class="form-privacy-note">We respect your privacy. Your information is never shared with third parties.</p>
-            </form>
-          </div>
+                <div id="form-notice" class="form-notice" role="status"
+                  aria-live="polite" aria-atomic="true" hidden></div>
 
-          <!-- Right: Details -->
+                <p class="form-privacy-note">
+                  We respect your privacy. Your information is never shared with third parties.
+                </p>
+
+              </form>
+            </div><!-- /.contact-form-container -->
+
+            <!-- FAQ — fills the empty space below the form -->
+            <div class="contact-faq" id="contact-faq" aria-labelledby="faq-heading">
+              <span class="section-eyebrow section-eyebrow--left">FAQ</span>
+              <h2 id="faq-heading" class="contact-faq__heading">Frequently Asked Questions</h2>
+
+              <ul class="faq-list" role="list">
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq-1-answer"
+                    id="faq-1-btn"
+                  >
+                    <span>What does the free brand audit cover?</span>
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="faq-1-answer"
+                    role="region"
+                    aria-labelledby="faq-1-btn"
+                    hidden
+                  >
+                    <p>Our 30-minute brand audit covers your current visual identity, messaging clarity, brand consistency across touchpoints, and quick-win opportunities. You will leave with a clear picture of where your brand stands and what to prioritise next.</p>
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq-2-answer"
+                    id="faq-2-btn"
+                  >
+                    <span>How long does a typical project take?</span>
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="faq-2-answer"
+                    role="region"
+                    aria-labelledby="faq-2-btn"
+                    hidden
+                  >
+                    <p>Project timelines vary by scope. A brand identity typically takes 3–6 weeks, a website 4–8 weeks, and a full brand system 6–12 weeks. We will give you a detailed timeline during the discovery phase.</p>
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq-3-answer"
+                    id="faq-3-btn"
+                  >
+                    <span>Do you work with businesses outside Kenya?</span>
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="faq-3-answer"
+                    role="region"
+                    aria-labelledby="faq-3-btn"
+                    hidden
+                  >
+                    <p>Yes — we serve clients worldwide. All project communication, file delivery, and calls happen remotely. We have worked with businesses across Africa, Europe, and North America.</p>
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq-4-answer"
+                    id="faq-4-btn"
+                  >
+                    <span>What payment methods do you accept?</span>
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="faq-4-answer"
+                    role="region"
+                    aria-labelledby="faq-4-btn"
+                    hidden
+                  >
+                    <p>We accept M-PESA (Lipa Na M-PESA), bank transfer, and PayPal. Projects are typically structured with a 50% deposit to commence and 50% on delivery.</p>
+                  </div>
+                </li>
+
+                <li class="faq-item">
+                  <button
+                    class="faq-question"
+                    aria-expanded="false"
+                    aria-controls="faq-5-answer"
+                    id="faq-5-btn"
+                  >
+                    <span>How do I get started?</span>
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                  </button>
+                  <div
+                    class="faq-answer"
+                    id="faq-5-answer"
+                    role="region"
+                    aria-labelledby="faq-5-btn"
+                    hidden
+                  >
+                    <p>Simply fill in the contact form above or book a free 30-minute brand audit call using the Google Calendar link on this page. We will respond within 24–48 hours to schedule a discovery conversation.</p>
+                  </div>
+                </li>
+
+              </ul>
+            </div><!-- /.contact-faq -->
+
+          </div><!-- /.contact-left-col -->
+
+          <!-- Right col: Details -->
           <div class="contact-details-container">
 
             <div class="contact-info-card">
@@ -127,14 +294,14 @@
                 <span class="contact-info-icon" aria-hidden="true">📧</span>
                 <div class="contact-info-content">
                   <span class="contact-info-label">Email</span>
-                  <a href="mailto:hello@junoatelier.co" class="contact-info-link">hello@junoatelier.co</a>
+                  <a href="mailto:hello@jatelier.art" class="contact-info-link">hello@jatelier.art</a>
                 </div>
               </div>
               <div class="contact-info-item">
                 <span class="contact-info-icon" aria-hidden="true">📱</span>
                 <div class="contact-info-content">
                   <span class="contact-info-label">Phone</span>
-                  <a href="tel:+254700123456" class="contact-info-link">+254 700 123 456</a>
+                  <a href="tel:+254786296748" class="contact-info-link">+254 786 296 748</a>
                 </div>
               </div>
               <div class="contact-info-item">
@@ -162,12 +329,33 @@
               </div>
             </div>
 
+            <!-- Book a Call Card -->
             <div class="contact-cta-card">
-              <div class="contact-cta-icon" aria-hidden="true">🎯</div>
+              <div class="contact-cta-icon" aria-hidden="true">📅</div>
               <h3 class="contact-cta-title">Book a Free Brand Audit</h3>
-              <p class="contact-cta-text">Every great brand begins with a conversation. Book your free 30-minute brand audit call.</p>
-              <a href="brand-audit.html" class="cta-btn cta-btn--full contact-cta-btn">Schedule Your Call</a>
-              <p class="contact-cta-note">(Calendly link placeholder)</p>
+              <p class="contact-cta-text">
+                Every great brand begins with a conversation. Book your free
+                30-minute brand audit call directly on Google Calendar.
+              </p>
+              <div class="contact-cta-availability">
+                <div class="availability-item">
+                  <span class="availability-icon" aria-hidden="true">📆</span>
+                  <span class="availability-text">Monday – Friday</span>
+                </div>
+                <div class="availability-item">
+                  <span class="availability-icon" aria-hidden="true">🕑</span>
+                  <span class="availability-text">2:00 PM – 4:00 PM (EAT)</span>
+                </div>
+              </div>
+              <a
+                href="https://calendar.app.google/FWaZCJnfJGKiHbrP9"
+                class="cta-btn cta-btn--full contact-cta-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Book a free brand audit call — opens Google Calendar in a new tab"
+              >
+                📅 Schedule on Google Calendar
+              </a>
             </div>
 
             <div class="contact-social-block">
@@ -185,12 +373,12 @@
               </div>
             </div>
 
-          </div>
-        </div>
-      </div>
+          </div><!-- /.contact-details-container -->
+        </div><!-- /.contact-form-grid -->
+      </div><!-- /.container -->
     </section>
 
-    <!-- ── Map Section ── -->
+    <!-- ── Map Section — restored to original position ── -->
     <section class="contact-map-section" aria-labelledby="map-heading">
       <div class="container">
         <span class="section-eyebrow">Our Base</span>

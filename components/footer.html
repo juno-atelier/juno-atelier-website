@@ -31,12 +31,36 @@
         <p class="footer-desc">A brand studio building the next generation of African businesses with clarity, strategy, and intelligence.</p>
       </div>
 
-      <!-- Column 2: Contact -->
+      <!-- Column 2: Contact
+           ─────────────────────────────────────────────────────────────────
+           mailto: — clicking this opens the user's default email app
+                     (Gmail app, Outlook, Apple Mail, etc.) with the To
+                     field pre-filled as hello@jatelier.art.
+           tel:    — clicking this opens the phone/dialler app on mobile,
+                     or prompts a call app (Skype, FaceTime) on desktop.
+           ───────────────────────────────────────────────────────────────── -->
       <div class="footer-contact">
         <h4 class="footer-heading">Contact</h4>
         <address class="footer-address">
-          <a href="mailto:hello@junoatelier.co" class="footer-link">hello@junoatelier.co</a>
-          <a href="tel:+254700123456"           class="footer-link">+254 700 123 456</a>
+
+          <!-- Email — mailto: triggers the OS default email app -->
+          <a
+            href="mailto:hello@jatelier.art"
+            class="footer-link"
+            aria-label="Send us an email at hello@jatelier.art"
+          >
+            hello@jatelier.art
+          </a>
+
+          <!-- Phone — tel: triggers the OS phone/dialler app -->
+          <a
+            href="tel:+254786296748"
+            class="footer-link"
+            aria-label="Call us at +254 786 296 748"
+          >
+            +254 786 296 748
+          </a>
+
           <span class="footer-address-text">Nairobi, Kenya</span>
         </address>
       </div>
@@ -69,20 +93,11 @@
       </p>
     </div><!-- /.footer-bottom -->
 
-    <!-- ── Credit Strip ──────────────────────────────────────────────────────
-         Slim tertiary row: "Made by [JUNO LOGO] with ♥"
-         Styled exclusively via footer-credit-strip.css (fc- prefix).
-         No JS required — purely declarative.
-    ─────────────────────────────────────────────────────────────────────── -->
-    <div
-      class="fc-strip"
-      role="contentinfo"
-      aria-label="Site credit"
-    >
+    <!-- ── Credit Strip ── -->
+    <div class="fc-strip" role="contentinfo" aria-label="Site credit">
       <span class="fc-strip__text">Made&nbsp;by</span>
-
       <a
-        href="https://junoatelier.co"
+        href="https://jatelier.art"
         class="fc-strip__link"
         target="_blank"
         rel="noopener noreferrer"
@@ -99,7 +114,6 @@
           draggable="false"
         >
       </a>
-
       <span class="fc-strip__text">
         with&nbsp;<span class="fc-strip__heart" aria-hidden="true">♥</span>
       </span>
