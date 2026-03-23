@@ -33,9 +33,9 @@
    CONFIG  ·  Tune these without touching the rest of the file
 ───────────────────────────────────────────────────────────────────────── */
 const CONFIG = Object.freeze({
-  delayPerChar:  100,  // was 65  — slower wave across letters
-  glowDuration:  480,  // was 320 — longer peak burn per letter
-  initialDelay:  500,  // was 380 — slight extra pause before it begins
+  delayPerChar:    85,   // was 65  — gentler wave progression
+  glowDuration:    500,  // was 320 — longer, softer burn per letter
+  initialDelay:    450,  // was 380 — slightly more breathing room at start
   triggerOnScroll: false,
   scrollThreshold: 0.30,
 });
