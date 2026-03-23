@@ -35,6 +35,21 @@
  * If you need to adjust the scroll threshold or compact behaviour, edit:
  *  → components.js  SCROLL_THRESHOLD constant
  *  → navbar.css     .site-header.is-scrolled and .site-header.is-scrolled .nav-inner
+ *
+ * CHANGE LOG v4.0 — Hero Letter Glow
+ * ─────────────────────────────────────────────────────────────────────────
+ * ADDED: initHeroLetterGlow()
+ *
+ * Imported from ./hero-letter-glow.js. Splits the <h1 id="hero-heading">
+ * into per-character <span> elements at runtime and runs a staggered
+ * three-stage glow sequence (dim → peak burst → soft settled glow).
+ *
+ * Companion files required:
+ *  → css/hero-letter-glow.css   (linked in index.html after hero-fullbleed.css)
+ *  → js/hero-letter-glow.js     (this import)
+ *
+ * Respects prefers-reduced-motion: characters are immediately revealed at
+ * full opacity with no glow when the user has that preference set.
  */
 
 
@@ -52,6 +67,9 @@ import {
 
 // Scroll FAB — floating scroll-to-top / scroll-to-bottom button
 import { initScrollFab } from './fab.js';
+
+// Hero — sequential letter illumination animation
+import { initHeroLetterGlow } from './hero-letter-glow.js';
 
 // Feature Modules
 import { initPortfolio }  from './portfolio.js';
@@ -130,6 +148,15 @@ function initApp() {
   // ── Global UI helpers ──────────────────────────────────────
   safeInit('Footer Year',    initFooterYear);
   safeInit('Logo Fallbacks', initLogoFallbacks);
+
+  // ── Hero Animations ────────────────────────────────────────
+  //
+  //    initHeroLetterGlow() reads <h1 id="hero-heading"> which is
+  //    part of the static HTML (not injected by components.js),
+  //    so it is safe to call here at DOM-ready time without any
+  //    async dependency on navbar/footer injection completing.
+  //
+  safeInit('Hero Letter Glow', initHeroLetterGlow);
 
   // ── Navigation ─────────────────────────────────────────────
   //

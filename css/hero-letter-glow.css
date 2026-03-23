@@ -1,0 +1,154 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   hero-letter-glow.css — Sequential Letter Illumination Effect
+   Juno Atelier · Vanilla CSS Module
+
+   CHARACTER STATES (three-stage transition per letter):
+   ─────────────────────────────────────────────────────
+   1. [default]        dim / unlit   — opacity: 0.15, no glow
+   2. .hero-char--lit  peak burst    — full brightness + wide text-shadow corona
+   3. .hero-char--settled  resting   — full opacity + soft residual glow
+
+   COLOUR VARIANTS:
+   ─────────────────────────────────────────────────────
+   .hero-char--white   → White/cream text  ("Brand systems for the")
+   .hero-char--accent  → Coral/terracotta  ("modern business")
+
+   INTEGRATION:
+   ─────────────────────────────────────────────────────
+   Add this <link> AFTER hero-fullbleed.css in your <head>:
+     <link rel="stylesheet" href="css/hero-letter-glow.css" />
+
+   CHANGE LOG:
+   v1 — Initial implementation
+═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   1. BASE CHARACTER SPAN
+   ─ display: inline preserves natural text wrapping
+   ─ will-change declared up-front so the browser composites the layer early
+───────────────────────────────────────────────────────────────────────── */
+.hero-char {
+  display:        inline;
+  position:       relative;
+
+  /* Unlit state — heavily dimmed so the lit letters pop */
+  opacity:        0.15;
+  text-shadow:    none;
+  filter:         none;
+
+  /* GPU-composited properties only — no layout reflow */
+  will-change:    opacity, text-shadow, filter;
+
+  /* Smooth out the peak-glow → settled transition */
+  transition:
+    opacity        0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    text-shadow    0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    filter         0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Spaces: invisible effect but must hold layout — never dimmed */
+.hero-char--space {
+  opacity:        1 !important;
+  filter:         none !important;
+  text-shadow:    none !important;
+  will-change:    auto;
+  transition:     none;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   2. WHITE / CREAM VARIANT  ·  "Brand systems for the"
+   Text colour: #FDF6E9 (--hero-text-primary)
+───────────────────────────────────────────────────────────────────────── */
+
+/* ── 2a. Peak burst — JS adds this class first ──────────────────────────── */
+.hero-char--white.hero-char--lit {
+  opacity:     1;
+  filter:      brightness(1.55);
+  text-shadow:
+    /* Inner hot core */
+    0 0  5px  rgba(255, 255, 255, 1.00),
+    /* Mid corona    */
+    0 0 14px  rgba(255, 252, 240, 0.90),
+    0 0 28px  rgba(255, 248, 225, 0.70),
+    /* Outer bloom   */
+    0 0 52px  rgba(255, 240, 200, 0.45),
+    0 0 90px  rgba(253, 246, 233, 0.18);
+}
+
+/* ── 2b. Settled — JS adds this class after glowDuration ms ────────────── */
+.hero-char--white.hero-char--settled {
+  opacity:     1;
+  filter:      brightness(1.06);
+  text-shadow:
+    0 0  4px  rgba(255, 255, 255, 0.55),
+    0 0 12px  rgba(255, 252, 240, 0.28),
+    0 0 26px  rgba(255, 240, 200, 0.10);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   3. ACCENT / CORAL VARIANT  ·  "modern business"
+   Text colour: #E2725B (--color-terracotta) / italic via <em>
+───────────────────────────────────────────────────────────────────────── */
+
+/* ── 3a. Peak burst ──────────────────────────────────────────────────────── */
+.hero-char--accent.hero-char--lit {
+  opacity:     1;
+  filter:      brightness(1.45) saturate(1.25);
+  text-shadow:
+    /* Inner hot core */
+    0 0  5px  rgba(232, 120, 106, 1.00),
+    /* Mid corona    */
+    0 0 14px  rgba(232, 115, 100, 0.90),
+    0 0 28px  rgba(226, 114,  91, 0.72),
+    /* Outer bloom   */
+    0 0 52px  rgba(210,  90,  75, 0.48),
+    0 0 90px  rgba(190,  70,  55, 0.20);
+}
+
+/* ── 3b. Settled ─────────────────────────────────────────────────────────── */
+.hero-char--accent.hero-char--settled {
+  opacity:     1;
+  filter:      brightness(1.06) saturate(1.08);
+  text-shadow:
+    0 0  4px  rgba(232, 120, 106, 0.62),
+    0 0 12px  rgba(226, 114,  91, 0.32),
+    0 0 26px  rgba(210,  90,  75, 0.14);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   4. REDUCED-MOTION FALLBACK
+   ─ All characters immediately visible at full opacity, no glow.
+   ─ Matches the hero-fullbleed.css pattern in §13 of that file.
+───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-char,
+  .hero-char--white.hero-char--lit,
+  .hero-char--white.hero-char--settled,
+  .hero-char--accent.hero-char--lit,
+  .hero-char--accent.hero-char--settled {
+    opacity:     1  !important;
+    filter:      none !important;
+    text-shadow: none !important;
+    transition:  none !important;
+    animation:   none !important;
+    will-change: auto;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   5. PRINT
+   ─ All text visible, no special effects — mirrors §14 in hero-fullbleed.css
+───────────────────────────────────────────────────────────────────────── */
+@media print {
+  .hero-char {
+    opacity:     1  !important;
+    filter:      none !important;
+    text-shadow: none !important;
+    will-change: auto;
+  }
+}
